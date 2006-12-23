@@ -4,7 +4,7 @@
 
 *cfengine-2.1.21-r1 (23 Dec 2006)
 
-  23 Dec 2006; TANABE ken-ichi <nabeken@tknetworks.org>
+  23 Dec 2006; TANABE ken-ichi <nabeken@meganekkomoe.org>
   +cfengine-2.1.21-r1:
   * Add gentoo-class patch
   * Remove old ebuilds/files
