@@ -2,6 +2,12 @@
 # Copyright 2002-2006 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/net-misc/cfengine/ChangeLog,v 1.78 2006/09/20 22:11:10 ramereth Exp $
 
+*cfengine-2.1.21-r1 (23 Dec 2006)
+
+  23 Dec 2006; TANABE ken-ichi <nabeken@tknetworks.org>
+  +cfengine-2.1.21-r1:
+  * Add gentoo class patch
+
 *cfengine-2.1.21 (20 Sep 2006)
 
   20 Sep 2006; Lance Albertson <ramereth@gentoo.org>
