@@ -6,7 +6,7 @@
 
   23 Dec 2006; TANABE ken-ichi <nabeken@tknetworks.org>
   +cfengine-2.1.21-r1:
-  * Add gentoo class patch
+  * Add gentoo-class patch
 
 *cfengine-2.1.21 (20 Sep 2006)
 
