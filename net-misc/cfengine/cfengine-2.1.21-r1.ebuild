@@ -10,7 +10,7 @@ SRC_URI="ftp://ftp.iu.hio.no/pub/cfengine/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~ppc ~sparc ~x86"
+KEYWORDS="amd64 ~arm ~ppc ~sparc ~x86"
 IUSE=""
 
 DEPEND=">=sys-libs/db-3.2
