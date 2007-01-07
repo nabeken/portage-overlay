@@ -8,7 +8,7 @@
   +cfengine-2.1.21-r1:
   * Add gentoo-hard-class patch
   * Remove old ebuilds/files
-  * Stable on amd64
+  * Stable on amd64, x86
 
 *cfengine-2.1.21 (20 Sep 2006)
 
