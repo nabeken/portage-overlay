@@ -1,0 +1,83 @@
+diff -Naur xmlrpc-epi-0.51.orig/Makefile.am xmlrpc-epi-0.51/Makefile.am
+--- xmlrpc-epi-0.51.orig/Makefile.am	2001-04-10 10:37:40.000000000 +0900
++++ xmlrpc-epi-0.51/Makefile.am	2007-02-03 00:00:00.000000000 +0900
+@@ -1,4 +1,4 @@
+-SUBDIRS = expat src sample
++SUBDIRS = src sample
+ 
+ CHANGE_LOG_GEN_BIN = scripts/cvs2cl.pl
+ CHANGE_LOG_GEN_FLAGS = -t -r -b --accum -I ChangeLog --gmt --prune
+diff -Naur xmlrpc-epi-0.51.orig/configure.in xmlrpc-epi-0.51/configure.in
+--- xmlrpc-epi-0.51.orig/configure.in	2002-06-24 08:48:29.000000000 +0900
++++ xmlrpc-epi-0.51/configure.in	2007-02-03 00:29:58.000000000 +0900
+@@ -15,12 +15,11 @@
+ AC_PROG_MAKE_SET
+ AC_PROG_LIBTOOL
+ 
+-LIBS="-L/usr/local/lib"
++LIBS="-lexpat"
+ 
+ dnl Checks for header files.
+ AC_HEADER_STDC
+-AC_CHECK_HEADERS(fcntl.h malloc.h unistd.h)
+-
++AC_CHECK_HEADERS(fcntl.h malloc.h unistd.h expat.h)
+ 
+ dnl Checks for typedefs, structures, and compiler characteristics.
+ AC_C_CONST
+@@ -36,7 +35,7 @@
+ 
+ AC_CHECK_FUNCS(mktime strstr)
+ 
+-AC_OUTPUT(src/Makefile Makefile sample/Makefile expat/Makefile expat/xmltok/Makefile expat/xmlparse/Makefile)
++AC_OUTPUT(src/Makefile Makefile sample/Makefile)
+ 
+ 
+ 
+diff -Naur xmlrpc-epi-0.51.orig/sample/Makefile.am xmlrpc-epi-0.51/sample/Makefile.am
+--- xmlrpc-epi-0.51.orig/sample/Makefile.am	2001-09-01 06:38:27.000000000 +0900
++++ xmlrpc-epi-0.51/sample/Makefile.am	2007-02-03 00:17:22.000000000 +0900
+@@ -1,4 +1,4 @@
+-INCLUDES=-I../src -I../expat/xmltok -I../expat/xmlparse
++INCLUDES=-I../src
+ 
+ bin_PROGRAMS = sample client server server_compliance_test memtest hello_client hello_server
+ 
+diff -Naur xmlrpc-epi-0.51.orig/src/Makefile.am xmlrpc-epi-0.51/src/Makefile.am
+--- xmlrpc-epi-0.51.orig/src/Makefile.am	2001-09-17 05:27:27.000000000 +0900
++++ xmlrpc-epi-0.51/src/Makefile.am	2007-02-03 00:14:27.000000000 +0900
+@@ -1,8 +1,8 @@
+-INCLUDES=-I../liblm -I../expat/xmltok -I../expat/xmlparse -I/usr/local/ssl/include 
++INCLUDES=-I../liblm
+ 
+ lib_LTLIBRARIES = libxmlrpc.la
+ 
+-libxmlrpc_la_LIBADD = ../expat/xmltok/libexpat_tok.la ../expat/xmlparse/libexpat_parse.la
++libxmlrpc_la_LIBADD = 
+ 
+ libxmlrpc_la_SOURCES = \
+ 	base64.c \
+diff -Naur xmlrpc-epi-0.51.orig/src/xml_element.c xmlrpc-epi-0.51/src/xml_element.c
+--- xmlrpc-epi-0.51.orig/src/xml_element.c	2002-05-24 02:46:51.000000000 +0900
++++ xmlrpc-epi-0.51/src/xml_element.c	2007-02-03 00:15:10.000000000 +0900
+@@ -91,7 +91,7 @@
+ 
+ #include "xml_element.h"
+ #include "queue.h"
+-#include "xmlparse.h"
++#include "expat.h"
+ #include "encodings.h"
+ 
+ #define my_free(thing)  if(thing) {free(thing); thing = 0;}
+diff -Naur xmlrpc-epi-0.51.orig/src/xmlrpc.c xmlrpc-epi-0.51/src/xmlrpc.c
+--- xmlrpc-epi-0.51.orig/src/xmlrpc.c	2002-03-10 08:15:44.000000000 +0900
++++ xmlrpc-epi-0.51/src/xmlrpc.c	2007-02-03 00:15:40.000000000 +0900
+@@ -120,7 +120,7 @@
+ 
+ #include "queue.h"
+ #include "xmlrpc.h"
+-#include "xmlparse.h"
++#include "expat.h"
+ #include "base64.h"
+ 
+ #include "xml_to_xmlrpc.h"

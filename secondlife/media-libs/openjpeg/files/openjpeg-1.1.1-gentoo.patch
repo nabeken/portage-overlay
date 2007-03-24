@@ -1,0 +1,20 @@
+diff -Naur OpenJPEG.orig/Makefile OpenJPEG/Makefile
+--- OpenJPEG.orig/Makefile	2007-02-13 17:49:00.000000000 +0900
++++ OpenJPEG/Makefile	2007-02-24 11:47:31.000000000 +0900
+@@ -36,7 +36,7 @@
+ dist: OpenJPEG
+ 	mkdir -p dist
+ 	cp *.a dist
+-	mv *.so dist
++	cp *.so dist
+ 	cp libopenjpeg/openjpeg.h dist
+ 
+ dos2unix:
+@@ -57,7 +57,6 @@
+ 	install -m 644 -o root -g root $(STATICLIB) $(INSTALLDIR)
+ 	install -m 755 -o root -g root $(SHAREDLIB) $(INSTALLDIR)
+ 	ln -sf $(SHAREDLIB) $(INSTALLDIR)/$(LIBNAME)
+-	ldconfig
+ 
+ clean:
+ 	rm -rf core dist/ u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)

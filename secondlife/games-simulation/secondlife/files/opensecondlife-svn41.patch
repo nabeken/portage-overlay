@@ -1,0 +1,28 @@
+Index: linden/indra/llcommon/llfasttimer.cpp
+===================================================================
+--- linden/indra/llcommon/llfasttimer.cpp	(revision 40)
++++ linden/indra/llcommon/llfasttimer.cpp	(revision 41)
+@@ -90,21 +90,14 @@
+ #endif // LL_WINDOWS
+ 
+ 
+-#if LL_LINUX
++#if LL_LINUX && (defined(__i386__) || defined(__amd64__))
+ U64 get_cpu_clock_count()
+ {
+ 	U64 x;
+ 	__asm__ volatile (".byte 0x0f, 0x31" : "=A" (x));
+ 	return x;
+ }
+-#endif
+-
+-#if LL_DARWIN
+-//
+-// Mac implementation of CPU clock
+-//
+-// Just use gettimeofday implementation for now
+-
++#else
+ U64 get_cpu_clock_count()
+ {
+ 	return get_clock_count();
