@@ -1,7 +1,15 @@
 diff -Naur linden.orig/indra/SConstruct linden/indra/SConstruct
 --- linden.orig/indra/SConstruct	2007-03-22 15:34:54.000000000 +0900
-+++ linden/indra/SConstruct	2007-03-22 20:46:41.000000000 +0900
-@@ -192,6 +192,12 @@
++++ linden/indra/SConstruct	2007-03-27 01:45:54.000000000 +0900
+@@ -185,13 +185,19 @@
+ 		if build_target == 'client':
+ 			flags += '-DAPPID=secondlife -DLL_SDL=1 -DLL_X11=1 '
+ 			flags += '-DLL_GTK=1 '
+-			client_external_libs += [ 'gtk-x11-2.0', 'elfio' ]
++			client_external_libs += [ 'gtk-x11-2.0', 'ELFIO' ]
+ 			include_dirs += [ '../libraries/' + system_str + '/include/gtk-2.0' ]
+ 			include_dirs += [ '../libraries/' + system_str + '/include/glib-2.0']
+ 			include_dirs += [ '../libraries/' + system_str + '/include/pango-1.0' ]
  			include_dirs += [ '../libraries/' + system_str + '/include/atk-1.0' ]
  			include_dirs += [ '../libraries/' + system_str + '/include/ELFIO' ]
  			include_dirs += [ '../libraries/' + system_str + '/include/llfreetype2' ]
