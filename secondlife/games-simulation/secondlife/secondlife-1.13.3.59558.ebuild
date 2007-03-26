@@ -35,7 +35,7 @@ RDEPEND=">=x11-libs/gtk+-2
 	dev-libs/expat
 	sys-libs/zlib
 	>=dev-libs/xmlrpc-epi-0.51
-	dev-libs/ELFIO
+	dev-libs/elfio
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute"
 #	xulrunner? ( net-libs/xulrunner )
