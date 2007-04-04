@@ -6,15 +6,13 @@ inherit games toolchain-funcs
 
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-#SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/03/slviewer-src-${PV}.tar.gz
-#	http://secondlife.com/developers/opensource/downloads/2007/03/slviewer-artwork-${PV}.zip"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/03/slviewer-src-FL-${PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/03/slviewer-artwork-FL-${PV}.zip"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/04/slviewer-src-${PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/2007/04/slviewer-artwork-${PV}.zip"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc64 ~x86"
-#IUSE="fmod xulrunner"
+#IUSE="fmod llmozlib"
 IUSE="fmod"
 RESTRICT="mirror"
 
@@ -38,7 +36,7 @@ RDEPEND=">=x11-libs/gtk+-2
 	dev-libs/elfio
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute"
-#	xulrunner? ( net-libs/xulrunner )
+#	llmozlib? ( net-libs/llmozlib-xulrunner )
 
 DEPEND="${RDEPEND}
 	dev-util/scons
@@ -46,56 +44,53 @@ DEPEND="${RDEPEND}
 	sys-devel/flex
 	sys-devel/bison"
 
-S="${WORKDIR}/linden"
+S="${WORKDIR}/linden/indra"
 
 dir="${GAMES_DATADIR}/${PN}"
 
 src_unpack() {
 	unpack ${A}
 
-	cd "${S}"/indra
-
-	if ! use fmod || [ "${ARCH}" != "x86" ] ; then
-		epatch "${FILESDIR}"/${PN}-1.13.3.59315-no_fmod.patch
-	fi
+	cd "${S}"
 
 	# VWR-100
 	epatch "${FILESDIR}"/${PN}-1.13.3.2-llimagej2coj_debug.patch
-
+	# opensecondlife.com
 	epatch "${FILESDIR}"/opensecondlife-svn41.patch
+
 	epatch "${FILESDIR}"/${P}-gentoo.patch
+	epatch "${FILESDIR}"/${P}-llversion.patch
 
-	sed -i -e "s/gcc_bin = .*$/gcc_bin = '$(tc-getCXX)'/" SConstruct || die
+	sed -i -e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" SConstruct || die
 
-	# "${S}"/indra/newview/viewer_manifest.py
-	# touch newview/gridargs.dat
-	sed -i -e 's|\(http://secondlife\.com/app/login/\)|\1firstlook/|' \
-		newview/skins/xui/en-us/panel_login.xml || die
-	echo -n '-settings settings_firstlook.xml' > newview/gridargs.dat
+	# "${S}"/newview/viewer_manifest.py
+	touch newview/gridargs.dat
 }
 
 src_compile() {
-	local mozlib
+	local myopts="BUILD=release BTARGET=client DISTCC=no"
 
-	cd "${S}"/indra
-
-	# if use xulrunner; then
-	#	mozlib="yes"
+	# if use llmozlib ; then
+	#	myopts="${myopts} MOZLIB=yes"
 	#else
-		mozlib="no"
+		myopts="${myopts} MOZLIB=no"
 	#fi
 
-	CLIENT_CPPFLAGS="${CXXFLAGS}" TEMP_BUILD_DIR="/" \
-		scons BUILD=release BTARGET=client DISTCC=no GRID=firstlook MOZLIB=${mozlib} || die
+	if use fmod && [ "${ARCH}" == "x86" ] ; then
+		myopts="${myopts} FMOD=yes"
+	else
+		myopts="${myopts} FMOD=no"
+	fi
+
+	CLIENT_CPPFLAGS="${CXXFLAGS}" TEMP_BUILD_DIR=/ scons ${myopts} || die
 }
 
 src_install() {
-	cd "${S}"/indra/newview/
+	cd "${S}"/newview/
 
 	insinto "${dir}"
-	#doins featuretable.txt featuretable_mac.txt gpu_table.txt gridargs.dat || die
-	doins featuretable.txt gpu_table.txt .txt gridargs.dat || die
-	doins -r app_settings character fonts help skins res-sdl || die
+	doins featuretable.txt gpu_table.txt gridargs.dat || die
+	doins -r app_settings character fonts skins res-sdl || die
 
 	doins lsl_guide.html releasenotes.txt || die
 	newins licenses-linux.txt licenses.txt || die
@@ -103,7 +98,7 @@ src_install() {
 	newins res/ll_icon.ico secondlife.ico || die
 
 	insinto "${dir}"/app_settings/
-	doins "${S}"/scripts/messages/message_template.msg || die
+	doins "${WORKDIR}"/linden/scripts/messages/message_template.msg || die
 
 	exeinto "${dir}"
 	doexe linux_tools/launch_url.sh || die
