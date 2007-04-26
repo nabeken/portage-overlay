@@ -1,3 +1,7 @@
+AUX llwindowssdl_16bit_depth.patch 1298 RMD160 a95ce90da9e466cee96f80afbc4b182dc1217566 SHA1 b8892f2d734b4a9ababe9dcec19b7b6c80dfd012 SHA256 1b4d67b6d12d6d5f23b393dd11d81d670ff09a2276fbba91161ce4ac60125b98
+MD5 d39398d4cacb5431f042ed6c99c6c810 files/llwindowssdl_16bit_depth.patch 1298
+RMD160 a95ce90da9e466cee96f80afbc4b182dc1217566 files/llwindowssdl_16bit_depth.patch 1298
+SHA256 1b4d67b6d12d6d5f23b393dd11d81d670ff09a2276fbba91161ce4ac60125b98 files/llwindowssdl_16bit_depth.patch 1298
 AUX opensecondlife-svn41.patch 635 RMD160 4ff31d0a2e52c2ccfa6f5591e0e6e46471609690 SHA1 03998427597e06ede4d702ab4a91a7c8ae6bf824 SHA256 100a42a60f46bc6abd8b2d77ae81ee2d4ea56edcfabb1ab00b589ce0d9314bce
 MD5 23d4c1db16f9351dc2d190120d1962b4 files/opensecondlife-svn41.patch 635
 RMD160 4ff31d0a2e52c2ccfa6f5591e0e6e46471609690 files/opensecondlife-svn41.patch 635
@@ -6,14 +10,6 @@ AUX secondlife-1.13.3.2-llimagej2coj_debug.patch 3795 RMD160 4a0bd6cb16e1b35b445
 MD5 3b6706a0439c55c02e0d86acd4f495d1 files/secondlife-1.13.3.2-llimagej2coj_debug.patch 3795
 RMD160 4a0bd6cb16e1b35b445b2a61e7d7e372cdcd4450 files/secondlife-1.13.3.2-llimagej2coj_debug.patch 3795
 SHA256 d1d16728aa2ebfac50b0563aa57a2f03d8e3dfd12f0fc10c2c2d3e99bcec28ca files/secondlife-1.13.3.2-llimagej2coj_debug.patch 3795
-AUX secondlife-1.13.3.59315-no_fmod.patch 1146 RMD160 6c9a0f3f2c60fc9dcd7bf89e89c878caa4f730f7 SHA1 ed09cfb98608f530df3286e4d0e2b517821dcd6d SHA256 56a9cf153a2dc18c0527e6c2fed0645f57a542a7ab0990fad333542ebeee2a78
-MD5 29bf4466ac67b38cad15439d87d4f888 files/secondlife-1.13.3.59315-no_fmod.patch 1146
-RMD160 6c9a0f3f2c60fc9dcd7bf89e89c878caa4f730f7 files/secondlife-1.13.3.59315-no_fmod.patch 1146
-SHA256 56a9cf153a2dc18c0527e6c2fed0645f57a542a7ab0990fad333542ebeee2a78 files/secondlife-1.13.3.59315-no_fmod.patch 1146
-AUX secondlife-1.13.3.59558-gentoo.patch 8462 RMD160 3d2715f60eda6f71a4c0818d2cd3bfe05a1408b6 SHA1 93355329c312b1bb6400e100d159f56b59e96e4d SHA256 c19dc238b3f6217799e1d4a94d722c93a497654d21812185ab9ab832ebaa55f5
-MD5 3beae9383416e21674415afc3e6dba62 files/secondlife-1.13.3.59558-gentoo.patch 8462
-RMD160 3d2715f60eda6f71a4c0818d2cd3bfe05a1408b6 files/secondlife-1.13.3.59558-gentoo.patch 8462
-SHA256 c19dc238b3f6217799e1d4a94d722c93a497654d21812185ab9ab832ebaa55f5 files/secondlife-1.13.3.59558-gentoo.patch 8462
 AUX secondlife-1.14.0.1-gentoo.patch 9631 RMD160 1a81ae51d8ade19f12c8130094210abe3979a91e SHA1 31a2b8c9cbec151bf9d6a56dabc1d488bcb864f3 SHA256 ccaa01b2ec2ae7375877c6f196efa46b00120babaa8b5ee490f11d8ddf20a4a4
 MD5 9e8042891190fac8c4812b9519f888df files/secondlife-1.14.0.1-gentoo.patch 9631
 RMD160 1a81ae51d8ade19f12c8130094210abe3979a91e files/secondlife-1.14.0.1-gentoo.patch 9631
@@ -22,21 +18,30 @@ AUX secondlife-1.14.0.1-llversion.patch 427 RMD160 d69a83076e4d43cb8f94753892c6b
 MD5 f8808833fd80bb6221f6b669cf43c726 files/secondlife-1.14.0.1-llversion.patch 427
 RMD160 d69a83076e4d43cb8f94753892c6bdb144d2823f files/secondlife-1.14.0.1-llversion.patch 427
 SHA256 90d6a6867ff8b62f302c9406aa1d4999dd5349cbf947a1eb8645435ef4bc3a7a files/secondlife-1.14.0.1-llversion.patch 427
-DIST slviewer-artwork-1.14.0.0.zip 20005643 RMD160 6ea313fb227e73c853c25754d2e89d2fc289d22a SHA1 0e9e1906097731cd390cbbb6cec521f078c4fb5f SHA256 793111dfebe03eca7c78cc1bed50d4dfa6daf2b70856bc1cc51abb880a3dbea1
+AUX secondlife-1.15.0.2-gentoo.patch 8904 RMD160 d0286837a9be61eb2116902bceb3a6faf43a640a SHA1 cfb2a483c8ea1916d6a5f421ed1940b6dcdb6a50 SHA256 d1e442d29d60e87b9beae1c57d72b698b8bf6b9f16051d8915ce6dbc39a0fbf2
+MD5 7b1bbe9ce14f5bc4342cb7c749c06d57 files/secondlife-1.15.0.2-gentoo.patch 8904
+RMD160 d0286837a9be61eb2116902bceb3a6faf43a640a files/secondlife-1.15.0.2-gentoo.patch 8904
+SHA256 d1e442d29d60e87b9beae1c57d72b698b8bf6b9f16051d8915ce6dbc39a0fbf2 files/secondlife-1.15.0.2-gentoo.patch 8904
+AUX secondlife-1.15.0.2-mozlib.patch 6060 RMD160 24ecb4ac17df2c8dd899129b57ce9e17d62f22dc SHA1 93d23f7b977b5e5a38b3e0936799d48ecac2c4ad SHA256 4923747aefd3f271cb97db43d6a4a2e8f3a93a0cc578abe1635fd63befb72a4f
+MD5 8f75b5f0d2fe6913a46f6e760d7c02fe files/secondlife-1.15.0.2-mozlib.patch 6060
+RMD160 24ecb4ac17df2c8dd899129b57ce9e17d62f22dc files/secondlife-1.15.0.2-mozlib.patch 6060
+SHA256 4923747aefd3f271cb97db43d6a4a2e8f3a93a0cc578abe1635fd63befb72a4f files/secondlife-1.15.0.2-mozlib.patch 6060
 DIST slviewer-artwork-1.14.0.1.zip 20005643 RMD160 cb662db2692bcf7e3594104c6f2cf14b2c61dc66 SHA1 ecb5689d014e917de6fc774ce702023c20f2aaeb SHA256 e35fc5632d16e1a229e2d6bd353ca5ad50018c7397b724579a38b1dcddeca77c
-DIST slviewer-src-1.14.0.0.tar.gz 9749469 RMD160 6a8113c1ae2fb5447e8e364363ad91b4422209df SHA1 1b3117e3e3702e35731b4155600ba64918456fad SHA256 c2a98c1e8021aa35119d2b486ba4f3c71ab135dde5730c6af9f803a926011b7e
+DIST slviewer-artwork-1.15.0.2.zip 24711017 RMD160 7a43bd0c72d20db701c4a9646dde41eae3cfc151 SHA1 97231fe3c589bc582390843ad997d0e1607b13fd SHA256 4c63d01a4377515a6030fdf1ed8ac11a66df93199c1eaf4087d1e9d9168e242d
+DIST slviewer-linux-libs-1.15.0.2.tar.gz 26593326 RMD160 45651188a6e15510fec85f9f15efd9b2eec56481 SHA1 ca6c25d111c77bef8525b3abc4318798c6d8a3dd SHA256 81ed4b90a65690916891d758fa72839c0aeb32bbecfe3af6416b009011bfc65f
 DIST slviewer-src-1.14.0.1.tar.gz 9750313 RMD160 c58d1b0b8800f9acabb8091935edce62c1742606 SHA1 c858c7c68611b74c8b550537ac1a1c0da10939dd SHA256 18905eab642cda5932f4dd6a792c402723c4fa655695b8b7d0ad1372ccad989e
-EBUILD secondlife-1.14.0.0.ebuild 3224 RMD160 6e0144577b5413b915237bc6bd21ea3598f4e0d1 SHA1 6746b3b5d4a042f1b0e595abf330731f55c23fcc SHA256 c218afe4b4e02f4f058812dabf886cfbdd5010161935597e487e4e7fff2ffbaf
-MD5 9b06c6dbf39e459f98a418ead441a98d secondlife-1.14.0.0.ebuild 3224
-RMD160 6e0144577b5413b915237bc6bd21ea3598f4e0d1 secondlife-1.14.0.0.ebuild 3224
-SHA256 c218afe4b4e02f4f058812dabf886cfbdd5010161935597e487e4e7fff2ffbaf secondlife-1.14.0.0.ebuild 3224
+DIST slviewer-src-1.15.0.2.tar.gz 5048294 RMD160 2f15ff2a12935b5ac0bf59f90c026466f7037e4f SHA1 10a0f66a46376e669a4dab55d5a3ec0529e09bde SHA256 4904ce2a2e3036aabf73b4f6dabf5d51cad35b722245c44f9d59bf841599acd9
 EBUILD secondlife-1.14.0.1.ebuild 3190 RMD160 7e6d25aba74ff88ef6f474c5325eeeae3db1c27a SHA1 d28ba750be8f88bea7309fc803380ba95631ac64 SHA256 bb77fad600dfb61f04af8f518deceb6fd819d36ce5afb1af297078c5aa99c581
 MD5 d49c2868bbc2f015797e6c553a4b8786 secondlife-1.14.0.1.ebuild 3190
 RMD160 7e6d25aba74ff88ef6f474c5325eeeae3db1c27a secondlife-1.14.0.1.ebuild 3190
 SHA256 bb77fad600dfb61f04af8f518deceb6fd819d36ce5afb1af297078c5aa99c581 secondlife-1.14.0.1.ebuild 3190
-MD5 95899a80bae2ff5f68b42ddca0de5f0e files/digest-secondlife-1.14.0.0 542
-RMD160 76a8e4217f3397814c635689773f49add730a3e2 files/digest-secondlife-1.14.0.0 542
-SHA256 ec16b717890866c32e47eb47fac62ab1411856f37897d3b0b1e9cf03839116b6 files/digest-secondlife-1.14.0.0 542
+EBUILD secondlife-1.15.0.2.ebuild 3405 RMD160 591404b029da9f887056a4e5d5c00e4bb464dafa SHA1 87631f1539e19b870a09ced2852acea230aa63d7 SHA256 eaf47c9266f1414e30c77c59b9a6c553f4ad542cfc57489789260094347efb13
+MD5 4334c2742beac7142fbdbd3437f3f36e secondlife-1.15.0.2.ebuild 3405
+RMD160 591404b029da9f887056a4e5d5c00e4bb464dafa secondlife-1.15.0.2.ebuild 3405
+SHA256 eaf47c9266f1414e30c77c59b9a6c553f4ad542cfc57489789260094347efb13 secondlife-1.15.0.2.ebuild 3405
 MD5 7472ca696355573accfb942f3a18f0d7 files/digest-secondlife-1.14.0.1 542
 RMD160 530da94440cf00685dbb411cd7d2804afc129517 files/digest-secondlife-1.14.0.1 542
 SHA256 310216f9e613c4ae30ab57ce827877299b750e5dd38aa5c1b145e3708a0d807f files/digest-secondlife-1.14.0.1 542
+MD5 593847c5a0066bc89031fea0d98cf6b7 files/digest-secondlife-1.15.0.2 834
+RMD160 35d441b65186f9514840d7e3e18a32e9db834c7a files/digest-secondlife-1.15.0.2 834
+SHA256 d85e3cf9e4a496c8e5f7927441194e23e08ebd1cb8c0483f15bb9bf6d2dad800 files/digest-secondlife-1.15.0.2 834

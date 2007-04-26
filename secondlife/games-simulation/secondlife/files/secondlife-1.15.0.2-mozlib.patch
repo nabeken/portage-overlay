@@ -1,0 +1,193 @@
+Index: ../indra/newview/llfloaterhtml.cpp
+===================================================================
+--- ../indra/newview/llfloaterhtml.cpp	(revision 60775)
++++ ../indra/newview/llfloaterhtml.cpp	(working copy)
+@@ -29,8 +29,12 @@
+ ////////////////////////////////////////////////////////////////////////////////
+ //
+ LLFloaterHtml::LLFloaterHtml()
+-:	LLFloater( "HTML Floater" ),
++:	LLFloater( "HTML Floater" )
++
++#if LL_LIBXUL_ENABLED
++        ,
+ 	mWebBrowser( 0 )
++#endif // LL_LIBXUL_ENABLED
+ {
+ 	// create floater from its XML definition
+ 	gUICtrlFactory->buildFloater( this, "floater_html.xml" );
+@@ -40,6 +44,7 @@
+ 	reshape( rect.getWidth(), rect.getHeight(), FALSE );
+ 	setRect( rect );
+ 
++#if LL_LIBXUL_ENABLED
+ 	mWebBrowser = LLViewerUICtrlFactory::getWebBrowserByName(this,  "html_floater_browser" );
+ 	if ( mWebBrowser )
+ 	{
+@@ -52,7 +57,8 @@
+ 		// don't automatically open secondlife links since we want to catch
+ 		// special ones that do other stuff (like open F1 Help)
+ 		mWebBrowser->setOpenSecondLifeLinksInMap( false );
+-	};
++	}
++#endif // LL_LIBXUL_ENABLED
+ 			
+ 	childSetAction("close_btn", onClickClose, this);
+ 	setDefaultBtn("close_btn");
+@@ -62,9 +68,11 @@
+ //
+ LLFloaterHtml::~LLFloaterHtml()
+ {
++#if LL_LIBXUL_ENABLED
+ 	// stop observing browser events
+ 	if ( mWebBrowser )
+ 		mWebBrowser->remObserver( this );
++#endif // LL_LIBXUL_ENABLED
+ 
+ 	// save position of floater
+ 	gSavedSettings.setRect( "HtmlFloaterRect", mRect );
+@@ -83,9 +91,11 @@
+ 	// set the title 
+ 	setTitle( childGetValue( title_str ).asString() );
+ 
++#if LL_LIBXUL_ENABLED
+ 	// navigate to the URL
+ 	if ( mWebBrowser )
+ 		mWebBrowser->navigateTo( childGetValue( url_str ).asString() );
++#endif // LL_LIBXUL_ENABLED
+ 
+ 	// make floater appear
+ 	setVisibleAndFrontmost();
+@@ -111,6 +121,7 @@
+ //
+ void LLFloaterHtml::onClickLinkSecondLife( const EventType& eventIn )
+ {
++#if LL_LIBXUL_ENABLED
+ 	const std::string protocol( "secondlife://app." );
+ 
+ 	// special 'app' secondlife link (using a different protocol - one that isn't registered in the browser) causes bad
+@@ -124,11 +135,12 @@
+ 		if ( LLString::compareInsensitive( cmd.c_str() , "floater.html.help" ) == 0 )
+ 		{
+ 			gViewerHtmlHelp.show();
+-		};
++		}
+ 	}
+ 	else
+ 	// regular secondlife link - just open the map as normal
+ 	{
+ 		mWebBrowser->openMapAtlocation( eventIn.getStringValue() );
+-	};
+-};
+\ No newline at end of file
++	}
++#endif // LL_LIBXUL_ENABLED
++};
+Index: ../indra/newview/llfloaterhtml.h
+===================================================================
+--- ../indra/newview/llfloaterhtml.h	(revision 60775)
++++ ../indra/newview/llfloaterhtml.h	(working copy)
+@@ -31,9 +31,11 @@
+ 		
+ 	private:
+ 		LLFloaterHtml();
++#if LL_LIBXUL_ENABLED
+ 		LLWebBrowserCtrl* mWebBrowser;
++#endif // LL_LIBXUL_ENABLED
+ 		static LLFloaterHtml* sInstance;
+ 		LLButton* mCloseButton;
+ };
+ 
+-#endif
+\ No newline at end of file
++#endif
+Index: ../indra/newview/llpreviewscript.cpp
+===================================================================
+--- ../indra/newview/llpreviewscript.cpp	(revision 60775)
++++ ../indra/newview/llpreviewscript.cpp	(working copy)
+@@ -450,12 +450,14 @@
+ 	LLFloater* help_floater = LLFloater::getFloaterByHandle(mLiveHelpHandle);
+ 	if (!help_floater) return;
+ 
++#if LL_LIBXUL_ENABLED
+ 	// update back and forward buttons
+ 	LLButton* fwd_button = LLUICtrlFactory::getButtonByName(help_floater, "fwd_btn");
+ 	LLButton* back_button = LLUICtrlFactory::getButtonByName(help_floater, "back_btn");
+ 	LLWebBrowserCtrl* browser = LLUICtrlFactory::getWebBrowserCtrlByName(help_floater, "lsl_guide_html");
+ 	back_button->setEnabled(browser->canNavigateBack());
+ 	fwd_button->setEnabled(browser->canNavigateForward());
++#endif // LL_LIBXUL_ENABLED
+ 
+ 	if (!immediate && !gSavedSettings.getBOOL("ScriptHelpFollowsCursor"))
+ 	{
+@@ -523,7 +525,9 @@
+ 	url_string.setArg("[LSL_STRING]", help_string);
+ 
+ 	addHelpItemToHistory(help_string);
++#if LL_LIBXUL_ENABLED
+ 	web_browser->navigateTo(url_string);
++#endif // LL_LIBXUL_ENABLED
+ }
+ 
+ void LLScriptEdCore::addHelpItemToHistory(const LLString& help_string)
+@@ -655,8 +659,10 @@
+ 	live_help_floater->childSetAction("back_btn", onClickBack, userdata);
+ 	live_help_floater->childSetAction("fwd_btn", onClickForward, userdata);
+ 
++#if LL_LIBXUL_ENABLED
+ 	LLWebBrowserCtrl* browser = LLUICtrlFactory::getWebBrowserCtrlByName(live_help_floater, "lsl_guide_html");
+ 	browser->setAlwaysRefresh(TRUE);
++#endif // LL_LIBXUL_ENABLED
+ 
+ 	LLComboBox* help_combo = LLUICtrlFactory::getComboBoxByName(live_help_floater, "history_combo");
+ 	LLKeywordToken *token;
+@@ -680,6 +686,7 @@
+ //static 
+ void LLScriptEdCore::onClickBack(void* userdata)
+ {
++#if LL_LIBXUL_ENABLED
+ 	LLScriptEdCore* corep = (LLScriptEdCore*)userdata;
+ 	LLFloater* live_help_floater = LLFloater::getFloaterByHandle(corep->mLiveHelpHandle);
+ 	if (live_help_floater)
+@@ -690,11 +697,13 @@
+ 			browserp->navigateBack();
+ 		}
+ 	}
++#endif // LL_LIBXUL_ENABLED
+ }
+ 
+ //static 
+ void LLScriptEdCore::onClickForward(void* userdata)
+ {
++#if LL_LIBXUL_ENABLED
+ 	LLScriptEdCore* corep = (LLScriptEdCore*)userdata;
+ 	LLFloater* live_help_floater = LLFloater::getFloaterByHandle(corep->mLiveHelpHandle);
+ 	if (live_help_floater)
+@@ -705,6 +714,7 @@
+ 			browserp->navigateForward();
+ 		}
+ 	}
++#endif // LL_LIBXUL_ENABLED
+ }
+ 
+ // static
+@@ -737,16 +747,17 @@
+ 	LLFloater* live_help_floater = LLFloater::getFloaterByHandle(corep->mLiveHelpHandle);
+ 	if (live_help_floater)
+ 	{
+-		LLWebBrowserCtrl* web_browser = gUICtrlFactory->getWebBrowserCtrlByName(live_help_floater, "lsl_guide_html");
+-
+ 		LLString help_string = ctrl->getValue().asString();
+ 
+ 		corep->addHelpItemToHistory(help_string);
+ 
++#if LL_LIBXUL_ENABLED
++		LLWebBrowserCtrl* web_browser = gUICtrlFactory->getWebBrowserCtrlByName(live_help_floater, "lsl_guide_html");
+ 		LLUIString url_string = gSavedSettings.getString("LSLHelpURL");
+ 		url_string.setArg("[APP_DIRECTORY]", gDirUtilp->getWorkingDir());
+ 		url_string.setArg("[LSL_STRING]", help_string);
+ 		web_browser->navigateTo(url_string);
++#endif // LL_LIBXUL_ENABLED
+ 	}
+ }
+ 
