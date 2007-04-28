@@ -50,7 +50,13 @@ S="${WORKDIR}/linden/indra"
 dir="${GAMES_DATADIR}/${PN}"
 
 src_unpack() {
-	unpack ${A}
+	# unpack font files
+	unpack slviewer-linux-libs-${PV}.tar.gz
+	rm -rf linden/indra/libraries
+	rm -rf linden/indra/newview/app_settings
+
+	unpack slviewer-src-${PV}.tar.gz
+	unpack slviewer-artwork-${PV}.zip
 
 	cd "${S}"
 
@@ -67,9 +73,6 @@ src_unpack() {
 
 	# "${S}"/newview/viewer_manifest.py
 	touch "${S}"/newview/gridargs.dat
-
-	rm -rf "${S}"/../libraries/i686-linux
-	rm -rf "${S}"/newview/app_settings/mozilla-runtime-linux-i686
 }
 
 src_compile() {
