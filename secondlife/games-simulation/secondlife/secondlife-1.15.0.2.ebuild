@@ -52,7 +52,7 @@ dir="${GAMES_DATADIR}/${PN}"
 src_unpack() {
 	# unpack font files
 	unpack slviewer-linux-libs-${PV}.tar.gz
-	rm -rf linden/indra/libraries
+	rm -rf linden/libraries
 	rm -rf linden/indra/newview/app_settings
 
 	unpack slviewer-src-${PV}.tar.gz
