@@ -6,9 +6,9 @@ inherit games toolchain-funcs
 
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/04/slviewer-src-${PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/04/slviewer-artwork-${PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/04/slviewer-linux-libs-${PV}.tar.gz"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-src-${PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-artwork-${PV}.zip
+	http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-linux-libs-${PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -63,8 +63,7 @@ src_unpack() {
 	# opensecondlife.com
 	epatch "${FILESDIR}"/opensecondlife-svn41.patch
 
-	epatch "${FILESDIR}"/${P}-mozlib.patch
-	epatch "${FILESDIR}"/${P}-gentoo.patch
+	epatch "${FILESDIR}"/${PN}-1.15.1.3-gentoo.patch
 
 	cd "${S}"/llwindow/
 	epatch "${FILESDIR}"/llwindowssdl_16bit_depth.patch
