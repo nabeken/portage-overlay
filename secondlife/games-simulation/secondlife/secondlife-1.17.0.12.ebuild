@@ -6,13 +6,13 @@ inherit games toolchain-funcs
 
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-src-${PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-artwork-${PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-linux-libs-${PV}.tar.gz"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/06/slviewer-src-${PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/2007/06/slviewer-artwork-${PV}.zip
+	http://secondlife.com/developers/opensource/downloads/2007/06/slviewer-linux-libs-${PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc64 ~x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="fmod"
 #IUSE="fmod llmozlib"
 RESTRICT="mirror"
@@ -36,7 +36,8 @@ RDEPEND=">=x11-libs/gtk+-2
 	>=dev-libs/xmlrpc-epi-0.51
 	dev-libs/elfio
 	>=media-libs/openjpeg-1.1.1
-	media-fonts/kochi-substitute"
+	media-fonts/kochi-substitute
+	dev-libs/google-perftools"
 #	llmozlib? ( net-libs/llmozlib-xulrunner )
 
 DEPEND="${RDEPEND}
@@ -63,7 +64,7 @@ src_unpack() {
 	# opensecondlife.com
 	epatch "${FILESDIR}"/opensecondlife-svn41.patch
 
-	epatch "${FILESDIR}"/${P}-gentoo.patch
+	epatch "${FILESDIR}"/${PN}-1.15.1.3-gentoo.patch
 
 	cd "${S}"/llwindow/
 	epatch "${FILESDIR}"/llwindowssdl_16bit_depth.patch
