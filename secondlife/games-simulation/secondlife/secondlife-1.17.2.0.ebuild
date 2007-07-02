@@ -6,13 +6,13 @@ inherit games toolchain-funcs
 
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-src-${PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-artwork-${PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/05/slviewer-linux-libs-${PV}.tar.gz"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/06/slviewer-src-${PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/2007/06/slviewer-artwork-${PV}.zip
+	http://secondlife.com/developers/opensource/downloads/2007/06/slviewer-linux-libs-${PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc64 ~x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="fmod"
 #IUSE="fmod llmozlib"
 RESTRICT="mirror"
@@ -36,7 +36,8 @@ RDEPEND=">=x11-libs/gtk+-2
 	>=dev-libs/xmlrpc-epi-0.51
 	dev-libs/elfio
 	>=media-libs/openjpeg-1.1.1
-	media-fonts/kochi-substitute"
+	media-fonts/kochi-substitute
+	dev-libs/google-perftools"
 #	llmozlib? ( net-libs/llmozlib-xulrunner )
 
 DEPEND="${RDEPEND}
@@ -60,13 +61,8 @@ src_unpack() {
 
 	cd "${S}"
 
-	# opensecondlife.com
-	epatch "${FILESDIR}"/opensecondlife-svn41.patch
-
-	epatch "${FILESDIR}"/${PN}-1.15.1.3-gentoo.patch
-
-	cd "${S}"/llwindow/
-	epatch "${FILESDIR}"/llwindowssdl_16bit_depth.patch
+	epatch "${FILESDIR}"/${P}-gentoo.patch
+	epatch "${FILESDIR}"/${P}-size_t.patch
 
 	sed -i -e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" "${S}"/SConstruct || die
 
@@ -75,7 +71,8 @@ src_unpack() {
 }
 
 src_compile() {
-	local myopts="BUILD=release BTARGET=client DISTCC=no"
+	local myarch
+	local myopts="BUILD=release BTARGET=client DISTCC=no STANDALONE=yes"
 
 	# if use llmozlib ; then
 	# 	myopts="${myopts} MOZLIB=yes"
@@ -83,13 +80,34 @@ src_compile() {
 		myopts="${myopts} MOZLIB=no"
 	# fi
 
+	# if use elfio ; then
+		myopts="${myopts} ELFIO=yes"
+	# else
+	#	myopts="${myopts} ELFIO=no"
+	# fi
+
+	case ${ARCH} in
+		x86)
+			myopts="${myopts} ARCH=i686"
+			;;
+		amd64)
+			myopts="${myopts} ARCH=x86_64"
+			;;
+		ppc|ppc64)
+			myopts="${myopts} ARCH=powerpc"
+			;;
+		*)
+			myopts="${myopts} ARCH=i686"
+			;;
+	esac
+
 	if use fmod && [ "${ARCH}" == "x86" ] ; then
 		myopts="${myopts} FMOD=yes"
 	else
 		myopts="${myopts} FMOD=no"
 	fi
 
-	CLIENT_CPPFLAGS="${CXXFLAGS}" TEMP_BUILD_DIR=/ scons ${myopts} || die
+	CLIENT_CPPFLAGS="${CXXFLAGS}" TEMP_BUILD_DIR= scons ${myopts} || die
 }
 
 src_install() {
@@ -115,7 +133,8 @@ src_install() {
 	exeinto "${dir}"/bin/
 	newexe secondlife-*-bin do-not-directly-run-secondlife-bin || die
 
-	keepdir "${dir}"/lib
+	exeinto "${dir}"/lib
+	doexe ../lib_release_client/*-linux/* || die
 
 	dosym /usr/share/fonts/kochi-substitute/kochi-mincho-subst.ttf /usr/share/games/secondlife/unicode.ttf
 

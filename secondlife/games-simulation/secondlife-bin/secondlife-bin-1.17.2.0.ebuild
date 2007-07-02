@@ -8,7 +8,7 @@ MY_P="SecondLife_i686_${PV//./_}"
 
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/downloads/viewer/${MY_P}.tar.bz2"
+SRC_URI="http://s3.amazonaws.com/download-secondlife-com/${MY_P}.tar.bz2"
 
 LICENSE="as-is"
 SLOT="0"
