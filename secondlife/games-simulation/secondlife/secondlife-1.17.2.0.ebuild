@@ -41,7 +41,7 @@ RDEPEND=">=x11-libs/gtk+-2
 #	llmozlib? ( net-libs/llmozlib-xulrunner )
 
 DEPEND="${RDEPEND}
-	dev-util/scons
+	>=dev-util/scons-0.97
 	dev-util/pkgconfig
 	sys-devel/flex
 	sys-devel/bison"
@@ -114,7 +114,8 @@ src_install() {
 	cd "${S}"/newview/
 
 	insinto "${dir}"
-	doins featuretable.txt gpu_table.txt gridargs.dat || die
+	doins gpu_table.txt gridargs.dat || die
+	newins featuretable.txt featuretable_linux.txt || die
 	doins -r app_settings character fonts skins res-sdl || die
 
 	doins lsl_guide.html releasenotes.txt || die
