@@ -13,8 +13,8 @@ SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/07/slviewer-
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="fmod"
-#IUSE="fmod llmozlib"
+IUSE="debug elfio fmod"
+#IUSE="debug elfio fmod llmozlib"
 RESTRICT="mirror"
 
 RDEPEND=">=x11-libs/gtk+-2
@@ -34,10 +34,10 @@ RDEPEND=">=x11-libs/gtk+-2
 	dev-libs/expat
 	sys-libs/zlib
 	>=dev-libs/xmlrpc-epi-0.51
-	dev-libs/elfio
+	elfio? ( dev-libs/elfio )
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute
-	dev-libs/google-perftools"
+	debug? ( dev-libs/google-perftools )"
 #	llmozlib? ( net-libs/llmozlib-xulrunner )
 
 DEPEND="${RDEPEND}
@@ -65,6 +65,9 @@ src_unpack() {
 	epatch "${FILESDIR}"/${PN}-1.17.2.0-size_t.patch
 	epatch "${FILESDIR}"/${P}-gcc4.patch
 
+	# VWR-1598
+	epatch "${FILESDIR}"/slviewer-${PV}-libresolv.patch
+
 	sed -i -e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" "${S}"/SConstruct || die
 
 	# "${S}"/newview/viewer_manifest.py
@@ -75,16 +78,22 @@ src_compile() {
 	local myarch
 	local myopts="BUILD=release BTARGET=client DISTCC=no STANDALONE=yes"
 
+	if use debug ; then
+		myopts="${myopts} BUILD=debug"
+	else
+		myopts="${myopts} BUILD=release"
+	fi
+
+	if use elfio ; then
+		myopts="${myopts} ELFIO=yes"
+	else
+		myopts="${myopts} ELFIO=no"
+	fi
+
 	# if use llmozlib ; then
 	# 	myopts="${myopts} MOZLIB=yes"
 	# else
 		myopts="${myopts} MOZLIB=no"
-	# fi
-
-	# if use elfio ; then
-		myopts="${myopts} ELFIO=yes"
-	# else
-	#	myopts="${myopts} ELFIO=no"
 	# fi
 
 	case ${ARCH} in

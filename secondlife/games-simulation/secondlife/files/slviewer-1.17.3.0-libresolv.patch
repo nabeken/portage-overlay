@@ -1,0 +1,29 @@
+diff -urN -x '*.orig' -x '*.rej' -x '*~' -x '.*' -x 'i386-*' linden.orig/indra/newview/llsrv.cpp linden.patched/indra/newview/llsrv.cpp
+--- linden.orig/indra/newview/llsrv.cpp	2007-07-06 13:43:29.000000000 -0500
++++ linden.patched/indra/newview/llsrv.cpp	2007-07-07 17:55:10.000000000 -0500
+@@ -73,6 +73,7 @@
+ 
+ #include <netdb.h>
+ 
++#define HOMEGROWN_RESPONSE_PARSER
+ #ifdef HOMEGROWN_RESPONSE_PARSER
+ 
+ // We ought to be using libresolv's ns_initparse and ns_parserr to
+diff -urN -x '*.orig' -x '*.rej' -x '*~' -x '.*' -x 'i386-*' linden.orig/indra/SConstruct linden.patched/indra/SConstruct
+--- linden.orig/indra/SConstruct	2007-07-07 17:43:13.000000000 -0500
++++ linden.patched/indra/SConstruct	2007-07-07 17:55:44.000000000 -0500
+@@ -196,13 +196,7 @@
+         """ +
+         '../libraries/' + system_str + '/include' )
+ 
+-    if platform == 'linux' and build_target == 'client':
+-        if arch == 'x86_64' and os.path.exists('/usr/lib64'):
+-            client_external_libs = [File('/usr/lib64/libresolv.a')]
+-        else:
+-            client_external_libs = ['llresolv6']
+-    else:
+-        client_external_libs = ['resolv']
++    client_external_libs = ['resolv']
+ 
+     system_link_flags = ''
+ 
