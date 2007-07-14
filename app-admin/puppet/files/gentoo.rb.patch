@@ -1,4 +1,4 @@
---- /usr/lib/ruby/site_ruby/1.8/puppet/provider/service/gentoo.rb	2007-07-14 01:21:49.000000000 +0900
+--- gentoo.rb.orig	2007-07-15 02:36:12.000000000 +0900
 +++ gentoo.rb	2007-07-15 01:12:55.000000000 +0900
 @@ -29,7 +29,7 @@
          return :false unless line
