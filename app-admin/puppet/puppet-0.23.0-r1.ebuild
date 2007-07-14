@@ -26,7 +26,7 @@ pkg_setup() {
 
 src_compile() {
 	cd ${S}/lib/puppet/provider/service
-	epatch ${FILESDIR}/gentoo.rb.patch
+	epatch ${FILESDIR}/gentoo.rb.patch.0.23.0
 	DESTDIR=${D} ruby_econf || die
 	DESTDIR=${D} ruby_emake "$@" || die
 }
