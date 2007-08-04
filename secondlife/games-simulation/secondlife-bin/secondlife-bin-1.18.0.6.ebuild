@@ -1,8 +1,8 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit games
+inherit games multilib
 
 MY_P="SecondLife_i686_${PV//./_}"
 
@@ -16,26 +16,9 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 RESTRICT="mirror strip"
 
-dir="${GAMES_PREFIX_OPT}/secondlife"
-QA_EXECSTACK="${dir:1}/bin/do-not-directly-run-secondlife-bin
-	${dir:1}/lib/libGLU.so.1
-	${dir:1}/lib/libkdu_v42R.so
-	${dir:1}/lib/libcrypto.so.0.9.7
-	${dir:1}/lib/libfmod-3.75.so
-	${dir:1}/app_settings/mozilla-runtime-linux-i686/libxul.so"
-QA_TEXTRELS="${dir:1}/lib/libfreetype.so.6
-	${dir:1}/lib/libcrypto.so.0.9.7
-	${dir:1}/lib/libGLU.so.1
-	${dir:1}/lib/libkdu_v42R.so
-	${dir:1}/lib/libfmod-3.75.so
-	${dir:1}/lib/libelfio.so
-	${dir:1}/lib/libSDL-1.2.so.0
-	${dir:1}/lib/libcurl.so.4
-	${dir:1}/app_settings/mozilla-runtime-linux-i686/libxul.so"
-
 RDEPEND="sys-libs/glibc
 	media-fonts/kochi-substitute
-	x86? ( 
+	x86? (
 		x11-libs/libX11
 		x11-libs/libXau
 		x11-libs/libXdmcp
@@ -59,6 +42,24 @@ RDEPEND="sys-libs/glibc
 	)"
 
 S=${WORKDIR}/${MY_P}
+
+dir="${GAMES_PREFIX_OPT}/secondlife"
+QA_EXECSTACK="${dir:1}/bin/do-not-directly-run-secondlife-bin
+	${dir:1}/lib/libcrypto.so.0.9.7
+	${dir:1}/lib/libfmod-3.75.so
+	${dir:1}/lib/libkdu_v42R.so
+	${dir:1}/app_settings/mozilla-runtime-linux-i686/libxul.so"
+QA_TEXTREL="${dir:1}opt/secondlife/bin/libllkdu.so
+	${dir:1}/lib/libSDL-1.2.so.0
+	${dir:1}/lib/libfmod-3.75.so
+	${dir:1}/lib/libcurl.so.4
+	${dir:1}/lib/libkdu_v42R.so
+	${dir:1}/app_settings/mozilla-runtime-linux-i686/libxul.so"
+
+pkg_setup() {
+	# x86 binary package, ABI=x86
+	has_multilib_profile && ABI="x86"
+}
 
 src_unpack() {
 	unpack ${A}

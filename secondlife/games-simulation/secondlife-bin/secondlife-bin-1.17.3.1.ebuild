@@ -1,4 +1,4 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -35,7 +35,7 @@ QA_TEXTRELS="${dir:1}/lib/libfreetype.so.6
 
 RDEPEND="sys-libs/glibc
 	media-fonts/kochi-substitute
-	x86? ( 
+	x86? (
 		x11-libs/libX11
 		x11-libs/libXau
 		x11-libs/libXdmcp

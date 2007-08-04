@@ -1,0 +1,10 @@
+# ChangeLog for games-simulation/secondlife-bin
+# Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+  13 Jul 2007; MATSUU Takuto <matsuu@gentoo.org> +metadata.xml,
+  -secondlife-bin-1.17.0.12.ebuild, -secondlife-bin-1.17.2.0.ebuild,
+  -secondlife-bin-1.17.3.0.ebuild, secondlife-bin-1.17.3.1.ebuild,
+  secondlife-bin-1.18.0.6.ebuild:
+  Cleanup.
+
