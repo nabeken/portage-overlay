@@ -1,6 +1,6 @@
 # Copyright 1999-2006 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/mail-filter/spamassassin/spamassassin-3.1.4.ebuild,v 1.1 2006/08/06 13:07:26 mcummings Exp $
+# $Header: /var/cvsroot/gentoo-x86/mail-filter/spamassassin/spamassassin-3.1.7.ebuild,v 1.1 2006/11/19 00:24:37 mcummings Exp $
 
 inherit perl-module eutils
 
@@ -8,12 +8,14 @@ MY_P=Mail-SpamAssassin-${PV//_/-}
 S=${WORKDIR}/${MY_P}
 DESCRIPTION="SpamAssassin is an extensible email filter which is used to identify spam."
 HOMEPAGE="http://spamassassin.apache.org/"
-SRC_URI="mirror://apache/spamassassin/source/${MY_P}.tar.bz2"
+SRC_URI="mirror://apache/spamassassin/source/${MY_P}.tar.bz2
+		http://www.emaillab.org/spamassassin/patch/${P}-normalize-test8.patch"
 
+SRC_TEST="do"
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sparc ~x86"
-IUSE="berkdb qmail ssl doc ldap mysql postgres sqlite tools ipv6"
+KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sparc x86"
+IUSE="berkdb cjk qmail ssl doc ldap mysql postgres sqlite tools ipv6"
 
 DEPEND=">=dev-lang/perl-5.8.2-r1
 	virtual/perl-MIME-Base64
@@ -48,6 +50,11 @@ DEPEND=">=dev-lang/perl-5.8.2-r1
 		dev-perl/DBD-SQLite
 	)
 
+	cjk? (
+		>=app-text/mecab-0.92
+		>=app-dicts/mecab-ipadic-2.7.0.20060707
+	)
+
 	ipv6? (
 		dev-perl/IO-Socket-INET6
 	)"
@@ -56,6 +63,10 @@ src_compile() {
 	# - Set SYSCONFDIR explicitly so we can't get bitten by bug 48205 again
 	#   (just to be sure, nobody knows how it could happen in the first place).
 	myconf="SYSCONFDIR=/etc DATADIR=/usr/share/spamassassin"
+	
+	if use cjk; then
+		epatch ${DISTDIR}/${P}-normalize-test8.patch
+	fi
 
 	# If ssl is enabled, spamc can be built with ssl support
 	if use ssl; then
@@ -106,10 +117,15 @@ src_compile() {
 		make spamc/qmail-spamc || die building qmail-spamc failed
 	fi
 
+
 	# Remove the MANIFEST files as they aren't docu files
 	rm -f MANIFEST*
 
 	use doc && make text_html_doc
+}
+
+src_install () {
+	perl-module_src_test
 }
 
 src_install () {
@@ -197,33 +213,34 @@ pkg_postinst() {
 	fi
 
 	ewarn
-	ewarn "spamd is not designed to listen to an untrusted network"
-	ewarn "and is vulnerable to DoS attacks (and eternal doom) if"
-	ewarn "configured to do so"
+	elog "spamd is not designed to listen to an untrusted network"
+	elog "and is vulnerable to DoS attacks (and eternal doom) if"
+	elog "configured to do so"
 	ewarn
-	ewarn "If you plan on using the -u flag to spamd, please read the notes"
-	ewarn "in /etc/conf.d/spamd regarding the location of the pid file."
+	elog "If you plan on using the -u flag to spamd, please read the notes"
+	elog "in /etc/conf.d/spamd regarding the location of the pid file."
 
 	einfo
-	einfo "If you build ${PN} with optional dependancy support,"
-	einfo "you can enable them in /etc/mail/spamassassin/init.pre"
+	elog "If you build ${PN} with optional dependancy support,"
+	elog "you can enable them in /etc/mail/spamassassin/init.pre"
 
 	if has_version '>=dev-lang/perl-5.8.8'; then
-		ewarn "Perl 5.8 now uses Unicode internally by default, which causes trouble for"
-		ewarn "SpamAssassin (and almost all other reasonably complex pieces of perl"
-		ewarn "code!)."
-		echo ""
-		ewarn "We've worked around this in most places, as far as we know, but there may"
-		ewarn "still be some issues.  In addition, there is a speed hit, which it would"
-		ewarn "be nice to avoid."
-		echo ""
-		ewarn "Setting the LANG environment variable before any invocation of"
-		ewarn "SpamAssassin sometimes seems to help fix it, like so:"
-		echo ""
-		ewarn "  export LANG=en_US"
-		echo ""
-		ewarn "Notably, the LANG setting must not include \"utf8\".   However, some folks"
-		ewarn "have reported that this makes no difference. ;)"
+		elog "A note from the SA developers:"
+		elog "Perl 5.8 now uses Unicode internally by default, which causes trouble for"
+		elog "SpamAssassin (and almost all other reasonably complex pieces of perl"
+		elog "code!)."
+		elog ""
+		elog "We've worked around this in most places, as far as we know, but there may"
+		elog "still be some issues.  In addition, there is a speed hit, which it would"
+		elog "be nice to avoid."
+		elog ""
+		elog "Setting the LANG environment variable before any invocation of"
+		elog "SpamAssassin sometimes seems to help fix it, like so:"
+		elog ""
+		elog "  export LANG=en_US"
+		elog ""
+		elog "Notably, the LANG setting must not include \"utf8\".   However, some folks"
+		elog "have reported that this makes no difference. ;)"
 	fi
 	einfo
 	if ! has_version 'dev-perl/Mail-SPF-Query'; then
