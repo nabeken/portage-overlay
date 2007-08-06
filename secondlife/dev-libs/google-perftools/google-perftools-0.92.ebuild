@@ -15,12 +15,6 @@ RESTRICT="test"
 
 DEPEND="sys-libs/libunwind"
 
-src_compile() {
-	econf || die
-	# parallel borks
-	emake -j1 || die
-}
-
 src_install() {
 	emake DESTDIR="${D}" install || die
 
