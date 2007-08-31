@@ -53,7 +53,7 @@ diff -Naur xmlrpc-epi-0.51.orig/src/Makefile.am xmlrpc-epi-0.51/src/Makefile.am
  lib_LTLIBRARIES = libxmlrpc.la
  
 -libxmlrpc_la_LIBADD = ../expat/xmltok/libexpat_tok.la ../expat/xmlparse/libexpat_parse.la
-+libxmlrpc_la_LIBADD = 
++libxmlrpc_la_LIBADD = -lexpat
  
  libxmlrpc_la_SOURCES = \
  	base64.c \

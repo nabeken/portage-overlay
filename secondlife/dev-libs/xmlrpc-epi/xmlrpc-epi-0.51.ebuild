@@ -4,7 +4,7 @@
 
 inherit autotools eutils
 
-DESCRIPTION=""
+DESCRIPTION="An implementation of the xmlrpc protocol in C"
 HOMEPAGE="http://xmlrpc-epi.sourceforge.net/"
 SRC_URI="mirror://sourceforge/xmlrpc-epi/${P}.tar.gz"
 
