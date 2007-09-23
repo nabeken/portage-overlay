@@ -6,15 +6,15 @@ inherit games toolchain-funcs
 
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/07/slviewer-src-${PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/07/slviewer-artwork-${PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/07/slviewer-linux-libs-${PV}.tar.gz"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/09/slviewer-src-RC-${PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/2007/09/slviewer-artwork-RC-${PV}.zip
+	http://secondlife.com/developers/opensource/downloads/2007/09/slviewer-linux-libs-RC-${PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="debug elfio fmod"
-#IUSE="debug elfio fmod llmozlib"
+IUSE="debug elfio fmod gstreamer"
+#IUSE="debug elfio fmod gstreamer kdu mozlib"
 RESTRICT="mirror"
 
 RDEPEND=">=x11-libs/gtk+-2
@@ -37,8 +37,9 @@ RDEPEND=">=x11-libs/gtk+-2
 	elfio? ( dev-libs/elfio )
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute
+	gstreamer? ( >=media-libs/gstreamer-0.10 )
 	debug? ( dev-libs/google-perftools )"
-#	llmozlib? ( net-libs/llmozlib-xulrunner )
+#	mozlib? ( net-libs/llmozlib-xulrunner )
 
 DEPEND="${RDEPEND}
 	>=dev-util/scons-0.97
@@ -50,23 +51,41 @@ S="${WORKDIR}/linden/indra"
 
 dir="${GAMES_DATADIR}/${PN}"
 
+pkg_config() {
+	if [ "${ARCH}" != "x86" ] ; then
+		if use fmod ; then
+			ewarn "fmod USE flag is only available on x86."
+		fi
+#		if use kdu ; then
+#			ewarn "kdu USE flag is only available on x86."
+#		fi
+#		if use mozlib ; then
+#			ewarn "mozlib USE flag is only available on x86."
+#		fi
+	fi
+}
+
 src_unpack() {
 	# unpack font files
-	unpack slviewer-linux-libs-${PV}.tar.gz
-	rm -rf linden/libraries
-	rm -rf linden/indra/newview/app_settings
+	unpack slviewer-linux-libs-RC-${PV}.tar.gz
 
-	unpack slviewer-src-${PV}.tar.gz
-	unpack slviewer-artwork-${PV}.zip
+#	if use kdu ; then
+#		find linden/libraries -type f -a ! -name '*kdu*' | xargs rm -f || die
+#	else
+		rm -rf linden/libraries
+#	fi
+
+#	if ! use mozlib ; then
+		rm -rf linden/indra/newview/app_settings
+#	fi
+
+	unpack slviewer-src-RC-${PV}.tar.gz
+	unpack slviewer-artwork-RC-${PV}.zip
 
 	cd "${S}"
 
-	epatch "${FILESDIR}"/${PN}-1.17.2.0-gentoo.patch
+	epatch "${FILESDIR}"/${P}-gentoo.patch
 	epatch "${FILESDIR}"/${PN}-1.17.2.0-size_t.patch
-	epatch "${FILESDIR}"/${PN}-1.17.3.0-gcc4.patch
-
-	# VWR-1598
-	epatch "${FILESDIR}"/slviewer-1.17.3.0-libresolv.patch
 
 	sed -i -e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" "${S}"/SConstruct || die
 
@@ -76,7 +95,7 @@ src_unpack() {
 
 src_compile() {
 	local myarch
-	local myopts="BUILD=release BTARGET=client DISTCC=no STANDALONE=yes"
+	local myopts="BUILD=release BTARGET=client DISTCC=no"
 
 	if use debug ; then
 		myopts="${myopts} BUILD=debug"
@@ -90,11 +109,11 @@ src_compile() {
 		myopts="${myopts} ELFIO=no"
 	fi
 
-	# if use llmozlib ; then
-	# 	myopts="${myopts} MOZLIB=yes"
-	# else
-		myopts="${myopts} MOZLIB=no"
-	# fi
+	if use gstreamer ; then
+		myopts="${myopts} GSTREAMER=yes"
+	else
+		myopts="${myopts} GSTREAMER=no"
+	fi
 
 	case ${ARCH} in
 		x86)
@@ -111,10 +130,20 @@ src_compile() {
 			;;
 	esac
 
-	if use fmod && [ "${ARCH}" == "x86" ] ; then
-		myopts="${myopts} FMOD=yes"
+	if [ "${ARCH}" == "x86" ] ; then
+		if use fmod; then
+			myopts="${myopts} FMOD=yes OPENSOURCE=no"
+		else
+			myopts="${myopts} FMOD=no OPENSOURCE=yes"
+		fi
+
+#		if use mozlib ; then
+#			myopts="${myopts} MOZLIB=yes STANDALONE=no"
+#		else
+			myopts="${myopts} MOZLIB=no STANDALONE=yes"
+#		fi
 	else
-		myopts="${myopts} FMOD=no"
+		myopts="${myopts} FMOD=no MOZLIB=no STANDALONE=yes OPENSOURCE=yes"
 	fi
 
 	CLIENT_CPPFLAGS="${CXXFLAGS}" TEMP_BUILD_DIR= scons ${myopts} || die
