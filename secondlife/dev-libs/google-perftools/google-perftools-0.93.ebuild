@@ -15,6 +15,9 @@ IUSE=""
 
 DEPEND="sys-libs/libunwind"
 
+# parallel make b0rks
+MAKEOPTS="-j1"
+
 src_install() {
 	emake DESTDIR="${D}" install || die
 
