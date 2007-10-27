@@ -6,9 +6,9 @@ inherit games toolchain-funcs
 
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/09/slviewer-src-RC-${PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/09/slviewer-artwork-RC-${PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/09/slviewer-linux-libs-RC-${PV}.tar.gz"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-src-RC-${PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-artwork-RC-${PV}.zip
+	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-linux-libs-RC-${PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -37,6 +37,7 @@ RDEPEND=">=x11-libs/gtk+-2
 	elfio? ( dev-libs/elfio )
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute
+	net-dns/c-ares
 	gstreamer? ( >=media-libs/gstreamer-0.10 )
 	debug? ( dev-libs/google-perftools )"
 #	mozlib? ( net-libs/llmozlib-xulrunner )
@@ -175,7 +176,7 @@ src_install() {
 	newexe secondlife-*-bin do-not-directly-run-secondlife-bin || die
 
 	exeinto "${dir}"/lib
-	doexe ../lib_release_client/*-linux/lib* || die
+	doexe ../lib_*_client/*-linux/lib* || die
 
 	dosym /usr/share/fonts/kochi-substitute/kochi-mincho-subst.ttf /usr/share/games/secondlife/unicode.ttf
 

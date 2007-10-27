@@ -1,0 +1,146 @@
+diff -Naur linden.orig/indra/SConstruct linden/indra/SConstruct
+--- linden.orig/indra/SConstruct	2007-10-20 08:45:51.000000000 +0900
++++ linden/indra/SConstruct	2007-10-22 01:56:46.000000000 +0900
+@@ -112,7 +112,7 @@
+ channel = optenv['CHANNEL']
+ standalone = optenv['STANDALONE']
+ opensource = standalone or optenv['OPENSOURCE']
+-enable_fmod = not opensource and optenv['FMOD']
++enable_fmod = optenv['FMOD']
+ elfio = optenv['ELFIO']
+ 
+ targets = [ target_param ]
+@@ -135,6 +135,7 @@
+     'gdk-pixbuf-2.0',
+     'glib-2.0',
+     'gmodule-2.0',
++    'gthread-2.0',
+     'gtk+-2.0',
+     'libpng',
+     'pango',
+@@ -155,6 +156,9 @@
+     'libssl',
+     ]
+ 
++if enable_gstreamer:
++    standalone_pkgs += [ 'gstreamer-0.10' ]
++
+ def pkgconfig(opt, pkgs=None):
+     if pkgs is None:
+         pkgs = standalone_pkgs + standalone_net_pkgs
+@@ -602,7 +606,7 @@
+         net_external_libs = [ 'curl', 'ssl', 'crypto', 'aprutil-1', 'apr-1' ]
+     net_external_libs += [ 'cares', 'expat' ]
+ 
+-    common_external_libs = net_external_libs + [ 'xmlrpc-epi', 'z' ]
++    common_external_libs = net_external_libs + [ 'xmlrpc', 'z' ]
+ 
+     if build_target == 'client':
+         if platform == 'linux':
+@@ -742,7 +746,7 @@
+                             internal_libs + external_libs)
+ 
+         # Rpcserver
+-        external_libs = common_external_libs + ['xmlrpc-epi', 'mysqlclient']
++        external_libs = common_external_libs + ['xmlrpc', 'mysqlclient']
+         internal_libs = ['llscene', 'llmessage', 'lldatabase', 'llvfs', 
+                 'llmath', 'llcommon']
+         create_executable('rpcserver/rpcserver' + file_suffix, 'rpcserver',
+diff -Naur linden.orig/indra/llimagej2coj/llimagej2coj.cpp linden/indra/llimagej2coj/llimagej2coj.cpp
+--- linden.orig/indra/llimagej2coj/llimagej2coj.cpp	2007-10-20 08:45:55.000000000 +0900
++++ linden/indra/llimagej2coj/llimagej2coj.cpp	2007-10-22 01:57:53.000000000 +0900
+@@ -33,7 +33,7 @@
+ #include "llimagej2coj.h"
+ 
+ // this is defined so that we get static linking.
+-#include "openjpeg/openjpeg.h"
++#include "openjpeg.h"
+ 
+ #include "lltimer.h"
+ #include "llmemory.h"
+diff -Naur linden.orig/indra/llmessage/llfiltersd2xmlrpc.cpp linden/indra/llmessage/llfiltersd2xmlrpc.cpp
+--- linden.orig/indra/llmessage/llfiltersd2xmlrpc.cpp	2007-10-20 08:45:58.000000000 +0900
++++ linden/indra/llmessage/llfiltersd2xmlrpc.cpp	2007-10-22 01:56:46.000000000 +0900
+@@ -80,7 +80,7 @@
+ 
+ #include <sstream>
+ #include <iterator>
+-#include <xmlrpc-epi/xmlrpc.h>
++#include <xmlrpc.h>
+ #include "apr-1/apr_base64.h"
+ 
+ #include "llbuffer.h"
+diff -Naur linden.orig/indra/llwindow/llgl.cpp linden/indra/llwindow/llgl.cpp
+--- linden.orig/indra/llwindow/llgl.cpp	2007-10-20 08:46:00.000000000 +0900
++++ linden/indra/llwindow/llgl.cpp	2007-10-22 08:56:36.000000000 +0900
+@@ -64,7 +64,7 @@
+ # include "GL/glxext.h"
+ // Use glXGetProcAddressARB instead of glXGetProcAddress - the ARB symbol
+ // is considered 'legacy' but works on more machines.
+-# define GLH_EXT_GET_PROC_ADDRESS(p) glXGetProcAddressARB((const GLubyte*)(p)) 
++# define GLH_EXT_GET_PROC_ADDRESS(p) glXGetProcAddress((const GLubyte*)(p)) 
+ #endif // LL_LINUX && !LL_MESA_HEADLESS
+ 
+ 
+diff -Naur linden.orig/indra/newview/llfloaterhtml.cpp linden/indra/newview/llfloaterhtml.cpp
+--- linden.orig/indra/newview/llfloaterhtml.cpp	2007-10-20 08:46:29.000000000 +0900
++++ linden/indra/newview/llfloaterhtml.cpp	2007-10-22 08:40:54.000000000 +0900
+@@ -228,7 +228,9 @@
+ // static
+ void LLFloaterHtml::onCommitUrlEdit(LLUICtrl* ctrl, void* user_data)
+ {
++#if LL_LIBXUL_ENABLED
+ 	LLFloaterHtml* self = (LLFloaterHtml*)user_data;
++#endif
+ 
+ 	LLLineEditor* editor = (LLLineEditor*)ctrl;
+ 	std::string url = editor->getText();
+diff -Naur linden.orig/indra/newview/llurldispatcher.cpp linden/indra/newview/llurldispatcher.cpp
+--- linden.orig/indra/newview/llurldispatcher.cpp	2007-10-20 08:46:31.000000000 +0900
++++ linden/indra/newview/llurldispatcher.cpp	2007-10-23 01:28:02.000000000 +0900
+@@ -151,7 +151,9 @@
+ {
+ 	if (matchPrefix(url, SLURL_SL_HELP_PREFIX))
+ 	{
++#if LL_LIBXUL_ENABLED
+ 		gViewerHtmlHelp.show();
++#endif	// LL_LIBXUL_ENABLED
+ 		return true;
+ 	}
+ 	return false;
+diff -Naur linden.orig/indra/newview/lluserauth.cpp linden/indra/newview/lluserauth.cpp
+--- linden.orig/indra/newview/lluserauth.cpp	2007-10-20 08:46:30.000000000 +0900
++++ linden/indra/newview/lluserauth.cpp	2007-10-22 01:56:46.000000000 +0900
+@@ -45,7 +45,7 @@
+ 
+ // NOTE: MUST include these after otherincludes since queue gets redefined!?!!
+ #include <curl/curl.h>
+-#include <xmlrpc-epi/xmlrpc.h>
++#include <xmlrpc.h>
+ 
+ 
+ 
+diff -Naur linden.orig/indra/newview/llvoiceclient.cpp linden/indra/newview/llvoiceclient.cpp
+--- linden.orig/indra/newview/llvoiceclient.cpp	2007-10-20 08:46:31.000000000 +0900
++++ linden/indra/newview/llvoiceclient.cpp	2007-10-22 01:56:46.000000000 +0900
+@@ -39,7 +39,7 @@
+ #include "llvoavatar.h"
+ #include "llbufferstream.h"
+ #include "llfile.h"
+-#include "expat/expat.h"
++#include "expat.h"
+ #include "llcallbacklist.h"
+ #include "llviewerregion.h"
+ #include "llviewernetwork.h"		// for gUserServerChoice
+diff -Naur linden.orig/indra/newview/llxmlrpctransaction.cpp linden/indra/newview/llxmlrpctransaction.cpp
+--- linden.orig/indra/newview/llxmlrpctransaction.cpp	2007-10-20 08:46:31.000000000 +0900
++++ linden/indra/newview/llxmlrpctransaction.cpp	2007-10-22 01:56:46.000000000 +0900
+@@ -37,7 +37,7 @@
+ 
+ // Have to include these last to avoid queue redefinition!
+ #include <curl/curl.h>
+-#include <xmlrpc-epi/xmlrpc.h>
++#include <xmlrpc.h>
+ 
+ #include "viewer.h"
+ 
