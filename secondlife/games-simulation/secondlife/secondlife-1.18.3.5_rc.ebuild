@@ -4,11 +4,15 @@
 
 inherit games toolchain-funcs
 
+MY_PV="${PV/*_rc/RC-${PV/_rc}}"
+GTK_PATCH="gtk-20071105"
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-src-RC-${PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-artwork-RC-${PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-linux-libs-RC-${PV}.tar.gz"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-src-${MY_PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-artwork-${MY_PV}.zip
+	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-linux-libs-${MY_PV}.tar.gz
+	http://alissa-sabre.cocolog-nifty.com/files/${GTK_PATCH}.tar.bz2
+	http://jira.secondlife.com/secure/attachment/11891/ime-20070909.patch"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -18,6 +22,7 @@ IUSE="debug elfio fmod gstreamer"
 RESTRICT="mirror"
 
 RDEPEND=">=x11-libs/gtk+-2
+	x11-libs/gtkglext
 	=dev-libs/apr-1*
 	=dev-libs/apr-util-1*
 	dev-libs/boost
@@ -37,7 +42,6 @@ RDEPEND=">=x11-libs/gtk+-2
 	elfio? ( dev-libs/elfio )
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute
-	net-dns/c-ares
 	gstreamer? ( >=media-libs/gstreamer-0.10 )
 	debug? ( dev-libs/google-perftools )"
 #	mozlib? ( net-libs/llmozlib-xulrunner )
@@ -68,7 +72,7 @@ pkg_config() {
 
 src_unpack() {
 	# unpack font files
-	unpack slviewer-linux-libs-RC-${PV}.tar.gz
+	unpack slviewer-linux-libs-${MY_PV}.tar.gz
 
 #	if use kdu ; then
 #		find linden/libraries -type f -a ! -name '*kdu*' | xargs rm -f || die
@@ -80,15 +84,22 @@ src_unpack() {
 		rm -rf linden/indra/newview/app_settings
 #	fi
 
-	unpack slviewer-src-RC-${PV}.tar.gz
-	unpack slviewer-artwork-RC-${PV}.zip
+	unpack slviewer-src-${MY_PV}.tar.gz
+	unpack slviewer-artwork-${MY_PV}.zip
+	unpack ${GTK_PATCH}.tar.bz2
 
 	cd "${S}"
 
-	epatch "${FILESDIR}"/${P}-gentoo.patch
-	epatch "${FILESDIR}"/${PN}-1.17.2.0-size_t.patch
+	epatch "${DISTDIR}/ime-20070909.patch"
+	epatch "${WORKDIR}/${GTK_PATCH/gtk-}/${GTK_PATCH}.patch"
+	epatch "${FILESDIR}/${P}-gentoo.patch"
+	epatch "${FILESDIR}/${PN}-1.17.2.0-size_t.patch"
 
-	sed -i -e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" "${S}"/SConstruct || die
+	sed -i \
+		-e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" \
+		-e "/_cflags =/s|-O2|${CFLAGS}|" \
+		-e "/_cxxflags =/s|-O2|${CXXFLAGS}|" \
+		"${S}"/SConstruct || die
 
 	# "${S}"/newview/viewer_manifest.py
 	#touch "${S}"/newview/gridargs.dat
@@ -148,7 +159,7 @@ src_compile() {
 		myopts="${myopts} FMOD=no MOZLIB=no STANDALONE=yes OPENSOURCE=yes"
 	fi
 
-	CLIENT_CPPFLAGS="${CXXFLAGS}" TEMP_BUILD_DIR= scons ${myopts} || die
+	TEMP_BUILD_DIR= scons ${myopts} || die
 }
 
 src_install() {

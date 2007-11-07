@@ -39,7 +39,7 @@ RDEPEND=">=x11-libs/gtk+-2
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute
 	net-dns/c-ares
-	gstreamer? ( >=media-libs/gstreamer-0.10 )
+	gstreamer? ( >=media-libs/gst-plugins-base-0.10 )
 	debug? ( dev-libs/google-perftools )"
 #	mozlib? ( net-libs/llmozlib-xulrunner )
 

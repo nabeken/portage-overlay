@@ -1,6 +1,6 @@
 diff -Naur linden.orig/indra/SConstruct linden/indra/SConstruct
---- linden.orig/indra/SConstruct	2007-09-15 05:53:52.000000000 +0900
-+++ linden/indra/SConstruct	2007-09-16 01:36:13.000000000 +0900
+--- linden.orig/indra/SConstruct	2007-11-07 00:57:16.000000000 +0900
++++ linden/indra/SConstruct	2007-11-07 00:59:15.000000000 +0900
 @@ -111,7 +111,7 @@
  channel = optenv['CHANNEL']
  standalone = optenv['STANDALONE']
@@ -15,10 +15,10 @@ diff -Naur linden.orig/indra/SConstruct linden/indra/SConstruct
      'glib-2.0',
      'gmodule-2.0',
 +    'gthread-2.0',
+     'gstreamer-0.10',
      'gtk+-2.0',
-     'libpng',
-     'pango',
-@@ -154,6 +155,9 @@
+     'gtkglext-1.0',
+@@ -155,6 +156,9 @@
      'libssl',
      ]
  
@@ -28,7 +28,7 @@ diff -Naur linden.orig/indra/SConstruct linden/indra/SConstruct
  def pkgconfig(opt, pkgs=None):
      if pkgs is None:
          pkgs = standalone_pkgs + standalone_net_pkgs
-@@ -610,7 +614,7 @@
+@@ -611,7 +615,7 @@
          net_external_libs = [ 'curl', 'ssl', 'crypto', 'aprutil-1', 'apr-1' ]
      net_external_libs += [ 'cares', 'expat' ]
  
@@ -37,7 +37,7 @@ diff -Naur linden.orig/indra/SConstruct linden/indra/SConstruct
  
      if build_target == 'client':
          if platform == 'linux':
-@@ -753,7 +757,7 @@
+@@ -754,7 +758,7 @@
                              internal_libs + external_libs)
  
          # Rpcserver
@@ -47,8 +47,8 @@ diff -Naur linden.orig/indra/SConstruct linden/indra/SConstruct
                  'llmath', 'llcommon']
          create_executable('rpcserver/rpcserver' + file_suffix, 'rpcserver',
 diff -Naur linden.orig/indra/llimagej2coj/llimagej2coj.cpp linden/indra/llimagej2coj/llimagej2coj.cpp
---- linden.orig/indra/llimagej2coj/llimagej2coj.cpp	2007-09-15 05:53:53.000000000 +0900
-+++ linden/indra/llimagej2coj/llimagej2coj.cpp	2007-09-16 01:33:57.000000000 +0900
+--- linden.orig/indra/llimagej2coj/llimagej2coj.cpp	2007-09-21 04:33:27.000000000 +0900
++++ linden/indra/llimagej2coj/llimagej2coj.cpp	2007-11-07 00:57:55.000000000 +0900
 @@ -31,7 +31,7 @@
  
  // this is defined so that we get static linking.
@@ -59,8 +59,8 @@ diff -Naur linden.orig/indra/llimagej2coj/llimagej2coj.cpp linden/indra/llimagej
  #include "lltimer.h"
  #include "llmemory.h"
 diff -Naur linden.orig/indra/llmessage/llfiltersd2xmlrpc.cpp linden/indra/llmessage/llfiltersd2xmlrpc.cpp
---- linden.orig/indra/llmessage/llfiltersd2xmlrpc.cpp	2007-09-15 05:53:53.000000000 +0900
-+++ linden/indra/llmessage/llfiltersd2xmlrpc.cpp	2007-09-16 01:33:57.000000000 +0900
+--- linden.orig/indra/llmessage/llfiltersd2xmlrpc.cpp	2007-09-21 04:33:27.000000000 +0900
++++ linden/indra/llmessage/llfiltersd2xmlrpc.cpp	2007-11-07 00:57:55.000000000 +0900
 @@ -77,7 +77,7 @@
  
  #include <sstream>
@@ -71,8 +71,8 @@ diff -Naur linden.orig/indra/llmessage/llfiltersd2xmlrpc.cpp linden/indra/llmess
  
  #include "llbuffer.h"
 diff -Naur linden.orig/indra/newview/lluserauth.cpp linden/indra/newview/lluserauth.cpp
---- linden.orig/indra/newview/lluserauth.cpp	2007-09-15 05:53:58.000000000 +0900
-+++ linden/indra/newview/lluserauth.cpp	2007-09-16 01:33:57.000000000 +0900
+--- linden.orig/indra/newview/lluserauth.cpp	2007-09-21 04:33:33.000000000 +0900
++++ linden/indra/newview/lluserauth.cpp	2007-11-07 00:57:55.000000000 +0900
 @@ -42,7 +42,7 @@
  
  // NOTE: MUST include these after otherincludes since queue gets redefined!?!!
@@ -83,8 +83,8 @@ diff -Naur linden.orig/indra/newview/lluserauth.cpp linden/indra/newview/llusera
  
  
 diff -Naur linden.orig/indra/newview/llvoiceclient.cpp linden/indra/newview/llvoiceclient.cpp
---- linden.orig/indra/newview/llvoiceclient.cpp	2007-09-15 05:53:59.000000000 +0900
-+++ linden/indra/newview/llvoiceclient.cpp	2007-09-16 01:33:57.000000000 +0900
+--- linden.orig/indra/newview/llvoiceclient.cpp	2007-09-21 04:33:33.000000000 +0900
++++ linden/indra/newview/llvoiceclient.cpp	2007-11-07 00:57:55.000000000 +0900
 @@ -36,7 +36,7 @@
  #include "llvoavatar.h"
  #include "llbufferstream.h"
@@ -95,8 +95,8 @@ diff -Naur linden.orig/indra/newview/llvoiceclient.cpp linden/indra/newview/llvo
  #include "llviewerregion.h"
  #include "llviewernetwork.h"		// for gUserServerChoice
 diff -Naur linden.orig/indra/newview/llxmlrpctransaction.cpp linden/indra/newview/llxmlrpctransaction.cpp
---- linden.orig/indra/newview/llxmlrpctransaction.cpp	2007-09-15 05:53:59.000000000 +0900
-+++ linden/indra/newview/llxmlrpctransaction.cpp	2007-09-16 01:33:57.000000000 +0900
+--- linden.orig/indra/newview/llxmlrpctransaction.cpp	2007-09-21 04:33:33.000000000 +0900
++++ linden/indra/newview/llxmlrpctransaction.cpp	2007-11-07 00:57:55.000000000 +0900
 @@ -34,7 +34,7 @@
  
  // Have to include these last to avoid queue redefinition!
