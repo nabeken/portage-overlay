@@ -16,6 +16,7 @@ IUSE=""
 
 RDEPEND="dev-libs/confuse
 	app-text/asciidoc
+	app-text/xmlto
 	x11-libs/cairo
 	x11-libs/libX11
 	x11-libs/libXext
