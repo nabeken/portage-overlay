@@ -29,10 +29,12 @@ src_unpack() {
 
 	local myarch="i386"
 
-	use amd64 && myarch="x86_64"
+	if ! use x86 ; then
+		myarch="$(uname -m)"
+	fi
 
 	sed -i \
-		-e "/^ARCH = /s:i386:${myarch}:" \
+		-e "/ARCH = /s:i386:${myarch}:" \
 		-e "s:gcc:$(tc-getCC):" \
 		-e "s:g++:$(tc-getCXX):" \
 		-e "/^GECKO_SDK = /s:=.*:= ${MOZILLA_FIVE_HOME}:" \
@@ -46,8 +48,8 @@ src_unpack() {
 	sed -i -e "/OnListenerEvent/s:<int>:<long>:" \
 		localserver/firefox/async_task_ff.cc || die
 
-	if use amd64  ; then
-		sed -i -e "s/x86/x86_64/g" base/firefox/install.rdf.m4 || die
+	if ! use x86 ; then
+		sed -i -e "s/x86/${myarch}/g" base/firefox/install.rdf.m4 || die
 	fi
 
 	if ! use debug ; then
