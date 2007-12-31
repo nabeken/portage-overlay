@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="dev-libs/confuse
+RDEPEND=">=dev-libs/confuse-2.6
 	x11-libs/cairo
 	x11-libs/libX11
 	x11-libs/libXext
@@ -33,8 +33,8 @@ src_unpack() {
 	cd "${S}"
 
 	sed -i \
-		-e "/^CFLAGS/s:=.*-O3:= ${CFLAGS}:" \
-		-e "/LDFLAGS/s:-ggdb3:${LDFLAGS}:" \
+		-e "/^CFLAGS/s:-O3:${CFLAGS}:" \
+		-e "/LDFLAGS/s:$: ${LDFLAGS}:" \
 		-e "/^CC/s:cc:$(tc-getCC):" \
 		-e "s:/usr/lib:/usr/$(get_libdir):" \
 		-e "s:/usr/local:/usr:" \
