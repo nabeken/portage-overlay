@@ -43,6 +43,7 @@ src_unpack() {
 		-e "s:\(\$(GECKO_SDK)\)/\(bin\|lib\):\1:" \
 		-e "/^COMPILE_FLAGS_opt = /s:-O2:${CFLAGS}:" \
 		-e "/^COMPILE_FLAGS = /s:-Werror::" \
+		-e "s:gecko_sdk/bin/xpidl:xpidl:" \
 		tools/{config,rules}.mk || die
 
 	sed -i -e "/OnListenerEvent/s:<int>:<long>:" \
