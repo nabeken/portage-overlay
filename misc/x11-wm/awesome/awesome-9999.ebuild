@@ -11,7 +11,7 @@ EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE=""
 
 RDEPEND=">=dev-libs/confuse-2.6
@@ -31,16 +31,6 @@ DEPEND="${RDEPEND}
 
 src_unpack() {
 	git_src_unpack
-	cd "${S}"
-
-#	sed -i \
-#		-e "/^CFLAGS/s:-O3:${CFLAGS}:" \
-#		-e "/LDFLAGS/s:$: ${LDFLAGS}:" \
-#		-e "/^CC/s:cc:$(tc-getCC):" \
-#		-e "s:/usr/lib:/usr/$(get_libdir):" \
-#		-e "s:/usr/local:/usr:" \
-#		config.mk || die "sed failed"
-	eautoreconf
 }
 
 src_install() {
