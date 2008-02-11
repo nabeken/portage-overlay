@@ -52,7 +52,7 @@ DEPEND=">=dev-lang/perl-5.8.2-r1
 	)
 
 	cjk? (
-		perl-gcpan/Text-Mecab
+		perl-gcpan/Text-MeCab
 		>=app-text/mecab-0.92
 		>=app-dicts/mecab-ipadic-2.7.0.20060707
 	)
