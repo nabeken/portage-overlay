@@ -5,12 +5,14 @@
 inherit games multilib
 
 MY_P="SecondLife_i686_${PV//./_}"
+MY_P="${MY_P/_rc/_RELEASECANDIDATE}"
 MY_P="${MY_P/_alpha/_WINDLIGHT}"
 
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-#SRC_URI="http://s3.amazonaws.com/download-secondlife-com/${MY_P}.tar.bz2"
-SRC_URI="http://firstlook-secondlife-com.s3.amazonaws.com/${MY_P}.tar.bz2"
+SRC_URI="http://download-secondlife-com.s3.amazonaws.com/${MY_P}.tar.bz2"
+#SRC_URI="http://release-candidate-secondlife-com.s3.amazonaws.com/${MY_P}.tar.bz2"
+#SRC_URI="http://firstlook-secondlife-com.s3.amazonaws.com/${MY_P}.tar.bz2"
 
 LICENSE="as-is"
 SLOT="0"
