@@ -1,0 +1,83 @@
+diff -Naur xmlrpc-epi-0.51.orig/Makefile.am xmlrpc-epi-0.51/Makefile.am
+--- xmlrpc-epi-0.51.orig/Makefile.am	2008-01-28 23:23:34.000000000 +0900
++++ xmlrpc-epi-0.51/Makefile.am	2008-01-29 00:24:09.000000000 +0900
+@@ -1,4 +1,4 @@
+-SUBDIRS = src sample
++SUBDIRS = src
+ 
+ CHANGE_LOG_GEN_BIN = scripts/cvs2cl.pl
+ CHANGE_LOG_GEN_FLAGS = -t -r -b --accum -I ChangeLog --gmt --prune
+diff -Naur xmlrpc-epi-0.51.orig/sample/Makefile.am xmlrpc-epi-0.51/sample/Makefile.am
+--- xmlrpc-epi-0.51.orig/sample/Makefile.am	2008-01-28 23:23:34.000000000 +0900
++++ xmlrpc-epi-0.51/sample/Makefile.am	2008-01-29 00:22:21.000000000 +0900
+@@ -3,23 +3,23 @@
+ bin_PROGRAMS = sample client server server_compliance_test memtest hello_client hello_server
+ 
+ sample_SOURCES = sample.c
+-sample_LDADD = -L@prefix@/lib ../src/libxmlrpc.la
++sample_LDADD = -L@libdir@ ../src/libxmlrpc-epi.la
+ 
+ client_SOURCES = client.c
+-client_LDADD = -L@prefix@/lib ../src/libxmlrpc.la
++client_LDADD = -L@libdir@ ../src/libxmlrpc-epi.la
+ 
+ server_SOURCES = server.c
+-server_LDADD = -L@prefix@/lib ../src/libxmlrpc.la
++server_LDADD = -L@libdir@ ../src/libxmlrpc-epi.la
+ 
+ hello_client_SOURCES = hello_client.c
+-hello_client_LDADD = -L@prefix@/lib ../src/libxmlrpc.la
++hello_client_LDADD = -L@libdir@ ../src/libxmlrpc-epi.la
+ 
+ hello_server_SOURCES = hello_server.c
+-hello_server_LDADD = -L@prefix@/lib ../src/libxmlrpc.la
++hello_server_LDADD = -L@libdir@ ../src/libxmlrpc-epi.la
+ 
+ server_compliance_test_SOURCES = server_compliance_test.c
+-server_compliance_test_LDADD = -L@prefix@/lib ../src/libxmlrpc.la
++server_compliance_test_LDADD = -L@libdir@ ../src/libxmlrpc-epi.la
+ 
+ memtest_SOURCES = memtest.c
+-memtest_LDADD = -L@prefix@/lib ../src/libxmlrpc.la
++memtest_LDADD = -L@libdir@ ../src/libxmlrpc-epi.la
+ 
+diff -Naur xmlrpc-epi-0.51.orig/src/Makefile.am xmlrpc-epi-0.51/src/Makefile.am
+--- xmlrpc-epi-0.51.orig/src/Makefile.am	2008-01-28 23:23:34.000000000 +0900
++++ xmlrpc-epi-0.51/src/Makefile.am	2008-01-29 00:20:59.000000000 +0900
+@@ -1,10 +1,10 @@
+ INCLUDES=-I../liblm
+ 
+-lib_LTLIBRARIES = libxmlrpc.la
++lib_LTLIBRARIES = libxmlrpc-epi.la
+ 
+-libxmlrpc_la_LIBADD = -lexpat
++libxmlrpc_epi_la_LIBADD = -lexpat
+ 
+-libxmlrpc_la_SOURCES = \
++libxmlrpc_epi_la_SOURCES = \
+ 	base64.c \
+ 	encodings.c \
+ 	queue.c \
+@@ -17,7 +17,7 @@
+ 	xmlrpc_introspection.c \
+         system_methods.c
+         
+-libxmlrpc_la_LDFLAGS = -version-info 0:3:0 
++libxmlrpc_epi_la_LDFLAGS = -version-info 0:3:0 
+ include_HEADERS = \
+ 	base64.h \
+ 	encodings.h \
+@@ -38,11 +38,11 @@
+ #
+ DOCSOURCES= \
+ 	$(include_HEADERS) \
+-	$(libxmlrpc_la_SOURCES)
++	$(libxmlrpc_epi_la_SOURCES)
+ 
+ # The name of your Project
+ #
+-PROJECT=xmlrpc
++PROJECT=xmlrpc-epi
+ 
+ # The various documentation files, derived from the source files.
+ # HTML

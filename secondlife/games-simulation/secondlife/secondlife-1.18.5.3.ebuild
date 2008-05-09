@@ -5,14 +5,11 @@
 inherit games toolchain-funcs
 
 MY_PV="${PV/*_rc/RC-${PV/_rc}}"
-GTK_PATCH="gtk-20071105"
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-src-${MY_PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-artwork-${MY_PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-linux-libs-${MY_PV}.tar.gz
-	http://alissa-sabre.cocolog-nifty.com/files/${GTK_PATCH}.tar.bz2
-	http://jira.secondlife.com/secure/attachment/11891/ime-20070909.patch"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/11/slviewer-src-${MY_PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/2007/11/slviewer-artwork-${MY_PV}.zip
+	http://secondlife.com/developers/opensource/downloads/2007/11/slviewer-linux-libs-${MY_PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -22,7 +19,6 @@ IUSE="debug elfio fmod gstreamer"
 RESTRICT="mirror"
 
 RDEPEND=">=x11-libs/gtk+-2
-	x11-libs/gtkglext
 	=dev-libs/apr-1*
 	=dev-libs/apr-util-1*
 	dev-libs/boost
@@ -38,11 +34,12 @@ RDEPEND=">=x11-libs/gtk+-2
 	=sys-libs/db-4.2*
 	dev-libs/expat
 	sys-libs/zlib
-	>=dev-libs/xmlrpc-epi-0.51
+	>=dev-libs/xmlrpc-epi-0.51-r1
 	elfio? ( dev-libs/elfio )
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute
-	gstreamer? ( >=media-libs/gstreamer-0.10 )
+	net-dns/c-ares
+	gstreamer? ( >=media-libs/gst-plugins-base-0.10 )
 	debug? ( dev-libs/google-perftools )"
 #	mozlib? ( net-libs/llmozlib-xulrunner )
 
@@ -86,14 +83,11 @@ src_unpack() {
 
 	unpack slviewer-src-${MY_PV}.tar.gz
 	unpack slviewer-artwork-${MY_PV}.zip
-	unpack ${GTK_PATCH}.tar.bz2
 
 	cd "${S}"
 
-	epatch "${DISTDIR}/ime-20070909.patch"
-	epatch "${WORKDIR}/${GTK_PATCH/gtk-}/${GTK_PATCH}.patch"
-	epatch "${FILESDIR}/${P}-gentoo.patch"
-	epatch "${FILESDIR}/${PN}-1.17.2.0-size_t.patch"
+	epatch "${FILESDIR}"/${P}-gentoo.patch
+	epatch "${FILESDIR}"/${PN}-1.17.2.0-size_t.patch
 
 	sed -i \
 		-e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" \
@@ -102,8 +96,7 @@ src_unpack() {
 		"${S}"/SConstruct || die
 
 	# "${S}"/newview/viewer_manifest.py
-	#touch "${S}"/newview/gridargs.dat
-	echo '-settings settings_default.xml -channel "Second Life default"' > "${S}"/newview/gridargs.dat
+	touch "${S}"/newview/gridargs.dat
 }
 
 src_compile() {

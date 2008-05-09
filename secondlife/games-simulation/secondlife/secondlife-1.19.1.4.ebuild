@@ -4,18 +4,18 @@
 
 inherit games toolchain-funcs
 
-MY_PV="${PV/*_rc/RC-${PV/_rc}}"
+MY_PV="Branch_1-19-1-Viewer-r84244"
+MY_DATE="2008/04"
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-src-${MY_PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-artwork-${MY_PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/10/slviewer-linux-libs-${MY_PV}.tar.gz"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/${MY_DATE}/slviewer-src-${MY_PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/${MY_DATE}/slviewer-artwork-${MY_PV}.zip
+	http://secondlife.com/developers/opensource/downloads/${MY_DATE}/slviewer-linux-libs-${MY_PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="debug elfio fmod gstreamer"
-#IUSE="debug elfio fmod gstreamer kdu mozlib"
+IUSE="debug elfio fmod gstreamer kdu llmozlib2"
 RESTRICT="mirror"
 
 RDEPEND=">=x11-libs/gtk+-2
@@ -34,14 +34,15 @@ RDEPEND=">=x11-libs/gtk+-2
 	=sys-libs/db-4.2*
 	dev-libs/expat
 	sys-libs/zlib
-	>=dev-libs/xmlrpc-epi-0.51
+	>=dev-libs/xmlrpc-epi-0.51-r1
 	elfio? ( dev-libs/elfio )
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute
 	net-dns/c-ares
+	x11-libs/pango
 	gstreamer? ( >=media-libs/gst-plugins-base-0.10 )
 	debug? ( dev-libs/google-perftools )"
-#	mozlib? ( net-libs/llmozlib-xulrunner )
+#	llmozlib2? ( net-libs/llmozlib2 )
 
 DEPEND="${RDEPEND}
 	>=dev-util/scons-0.97
@@ -58,12 +59,12 @@ pkg_config() {
 		if use fmod ; then
 			ewarn "fmod USE flag is only available on x86."
 		fi
-#		if use kdu ; then
-#			ewarn "kdu USE flag is only available on x86."
-#		fi
-#		if use mozlib ; then
-#			ewarn "mozlib USE flag is only available on x86."
-#		fi
+		if use kdu ; then
+			ewarn "kdu USE flag is only available on x86."
+		fi
+		if use llmozlib2 ; then
+			ewarn "llmozlib2 USE flag is only available on x86."
+		fi
 	fi
 }
 
@@ -71,15 +72,15 @@ src_unpack() {
 	# unpack font files
 	unpack slviewer-linux-libs-${MY_PV}.tar.gz
 
-#	if use kdu ; then
-#		find linden/libraries -type f -a ! -name '*kdu*' | xargs rm -f || die
-#	else
+	if use kdu ; then
+		find linden/libraries -type f -a ! -name '*kdu*' | xargs rm -f || die
+	else
 		rm -rf linden/libraries
-#	fi
+	fi
 
-#	if ! use mozlib ; then
+	if ! use llmozlib2 ; then
 		rm -rf linden/indra/newview/app_settings
-#	fi
+	fi
 
 	unpack slviewer-src-${MY_PV}.tar.gz
 	unpack slviewer-artwork-${MY_PV}.zip
@@ -87,7 +88,6 @@ src_unpack() {
 	cd "${S}"
 
 	epatch "${FILESDIR}"/${P}-gentoo.patch
-	epatch "${FILESDIR}"/${PN}-1.17.2.0-size_t.patch
 
 	sed -i \
 		-e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" \
@@ -96,13 +96,12 @@ src_unpack() {
 		"${S}"/SConstruct || die
 
 	# "${S}"/newview/viewer_manifest.py
-	#touch "${S}"/newview/gridargs.dat
-	echo '-settings settings_default.xml -channel "Second Life default"' > "${S}"/newview/gridargs.dat
+	touch "${S}"/newview/gridargs.dat
 }
 
 src_compile() {
 	local myarch
-	local myopts="BUILD=release BTARGET=client DISTCC=no"
+	local myopts="BUILD=release BTARGET=client DISTCC=no STANDALONE=yes"
 
 	if use debug ; then
 		myopts="${myopts} BUILD=debug"
@@ -138,19 +137,25 @@ src_compile() {
 	esac
 
 	if [ "${ARCH}" == "x86" ] ; then
-		if use fmod; then
-			myopts="${myopts} FMOD=yes OPENSOURCE=no"
+		if use fmod ; then
+			myopts="${myopts} FMOD=yes"
 		else
-			myopts="${myopts} FMOD=no OPENSOURCE=yes"
+			myopts="${myopts} FMOD=no"
 		fi
 
-#		if use mozlib ; then
-#			myopts="${myopts} MOZLIB=yes STANDALONE=no"
-#		else
-			myopts="${myopts} MOZLIB=no STANDALONE=yes"
-#		fi
+		if use kdu ; then
+			myopts="${myopts} OPENSOURCE=no"
+		else
+			myopts="${myopts} OPENSOURCE=yes"
+		fi
+
+		if use llmozlib2 ; then
+			myopts="${myopts} MOZLIB2=yes"
+		else
+			myopts="${myopts} MOZLIB2=no"
+		fi
 	else
-		myopts="${myopts} FMOD=no MOZLIB=no STANDALONE=yes OPENSOURCE=yes"
+		myopts="${myopts} FMOD=no MOZLIB2=no OPENSOURCE=yes"
 	fi
 
 	TEMP_BUILD_DIR= scons ${myopts} || die
