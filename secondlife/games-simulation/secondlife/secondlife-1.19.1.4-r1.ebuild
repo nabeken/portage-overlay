@@ -38,7 +38,7 @@ RDEPEND=">=x11-libs/gtk+-2
 	elfio? ( dev-libs/elfio )
 	>=media-libs/openjpeg-1.1.1
 	media-fonts/kochi-substitute
-	<net-dns/c-ares-1.15
+	>=net-dns/c-ares-1.5
 	x11-libs/pango
 	gstreamer? ( >=media-libs/gst-plugins-base-0.10 )
 	debug? ( dev-libs/google-perftools )"
@@ -88,6 +88,7 @@ src_unpack() {
 	cd "${S}"
 
 	epatch "${FILESDIR}"/${P}-gentoo.patch
+	epatch "${FILESDIR}"/VWR-3480.patch
 
 	sed -i \
 		-e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" \
