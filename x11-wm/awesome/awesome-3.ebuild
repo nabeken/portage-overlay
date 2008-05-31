@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-wm/awesome/awesome-2.3.ebuild,v 1.1 2008/05/06 13:47:36 matsuu Exp $
 
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
-EGIT_BRANCH="${P}"
+EGIT_BRANCH="master"
 EGIT_BOOTSTRAP="autogen.sh"
 
 inherit toolchain-funcs eutils git
