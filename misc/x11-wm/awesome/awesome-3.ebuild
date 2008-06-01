@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE="doc imlib"
 
-RDEPEND="x11-libs/libxcb
+RDEPEND=">=x11-libs/libxcb-1.1
 	>=x11-libs/xcb-util-9999
 	x11-libs/cairo
 	>=dev-libs/glib-2
