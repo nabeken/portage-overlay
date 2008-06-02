@@ -15,15 +15,15 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
-IUSE="doc imlib"
+IUSE="dbus doc imlib"
 
 RDEPEND=">=x11-libs/libxcb-1.1
 	>=x11-libs/xcb-util-9999
 	x11-libs/cairo
 	>=dev-libs/glib-2
-	>=sys-apps/dbus-1
 	>=dev-lang/lua-5.1
 	x11-libs/pango
+	dbus? ( >=sys-apps/dbus-1 )
 	imlib? ( media-libs/imlib2 )
 	!imlib? ( >=x11-libs/gtk+-2.2 )"
 #	x11-libs/libXrandr
@@ -53,6 +53,7 @@ pkg_setup() {
 src_compile() {
 	econf \
 		$(use_with imlib imlib2) \
+		$(use_with dbus) \
 		--docdir="/usr/share/doc/${PF}" || die
 	emake || die
 
