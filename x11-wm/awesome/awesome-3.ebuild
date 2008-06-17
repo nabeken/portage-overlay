@@ -3,7 +3,6 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-wm/awesome/awesome-2.3.ebuild,v 1.1 2008/05/06 13:47:36 matsuu Exp $
 
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
-EGIT_BRANCH="master"
 EGIT_BOOTSTRAP="autogen.sh"
 
 inherit toolchain-funcs eutils git
@@ -16,15 +15,16 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
-IUSE="doc imlib"
+IUSE="dbus doc imlib"
 
-RDEPEND="x11-libs/libxcb
+RDEPEND=">=x11-libs/libxcb-1.1
 	>=x11-libs/xcb-util-9999
 	x11-libs/cairo
 	>=dev-libs/glib-2
-	>=sys-apps/dbus-1
+	dev-libs/libev
 	>=dev-lang/lua-5.1
 	x11-libs/pango
+	dbus? ( >=sys-apps/dbus-1 )
 	imlib? ( media-libs/imlib2 )
 	!imlib? ( >=x11-libs/gtk+-2.2 )"
 #	x11-libs/libXrandr
@@ -54,6 +54,7 @@ pkg_setup() {
 src_compile() {
 	econf \
 		$(use_with imlib imlib2) \
+		$(use_with dbus) \
 		--docdir="/usr/share/doc/${PF}" || die
 	emake || die
 
