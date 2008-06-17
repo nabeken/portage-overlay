@@ -21,6 +21,7 @@ RDEPEND=">=x11-libs/libxcb-1.1
 	>=x11-libs/xcb-util-9999
 	x11-libs/cairo
 	>=dev-libs/glib-2
+	dev-libs/libev
 	>=dev-lang/lua-5.1
 	x11-libs/pango
 	dbus? ( >=sys-apps/dbus-1 )
