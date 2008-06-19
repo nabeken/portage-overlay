@@ -6,7 +6,7 @@
 SNAPSHOT="yes"
 
 inherit git x-modular
-EGIT_REPO_URI="git://git.naquadah.org/arnau/xcb-util.git"
+EGIT_REPO_URI="git://git.naquadah.org/~arnau/xcb-util.git"
 
 DESCRIPTION="X C-language Bindings sample implementations"
 HOMEPAGE="http://xcb.freedesktop.org/"
