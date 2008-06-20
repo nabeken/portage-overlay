@@ -3,11 +3,10 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-wm/awesome/awesome-2.3.ebuild,v 1.1 2008/05/06 13:47:36 matsuu Exp $
 
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
-EGIT_BOOTSTRAP="autogen.sh"
 
-inherit toolchain-funcs eutils git
+inherit cmake-utils git
 
-DESCRIPTION="awesome is a window manager initialy based on a dwm code rewriting"
+DESCRIPTION="A dynamic floating and tiling window manager"
 HOMEPAGE="http://awesome.naquadah.org/"
 #SRC_URI="http://awesome.naquadah.org/download/${P}.tar.gz"
 SRC_URI=""
@@ -24,23 +23,25 @@ RDEPEND=">=x11-libs/libxcb-1.1
 	dev-libs/libev
 	>=dev-lang/lua-5.1
 	x11-libs/pango
+	>=x11-libs/gtk+-2.2
 	dbus? ( >=sys-apps/dbus-1 )
-	imlib? ( media-libs/imlib2 )
-	!imlib? ( >=x11-libs/gtk+-2.2 )"
-#	x11-libs/libXrandr
-#	x11-libs/libXinerama
+	imlib? ( media-libs/imlib2 )"
 
 DEPEND="${RDEPEND}
+	dev-util/pkgconfig
 	dev-lang/python
 	app-text/asciidoc
 	app-text/xmlto
 	dev-util/pkgconfig
 	x11-proto/xineramaproto
 	x11-proto/xcb-proto
+	>=dev-util/cmake-2.6
 	doc? (
 		app-doc/doxygen
 		media-gfx/graphviz
 	)"
+
+DOCS="AUTHORS BUGS README STYLE"
 
 pkg_setup() {
 	if ! built_with_use --missing false x11-libs/cairo xcb; then
@@ -51,33 +52,36 @@ pkg_setup() {
 	fi
 }
 
-src_compile() {
-	econf \
-		$(use_with imlib imlib2) \
-		$(use_with dbus) \
-		--docdir="/usr/share/doc/${PF}" || die
-	emake || die
+src_unpack() {
+	git_src_unpack
+	cd "${S}"
+	sed -i -e '/AWESOME_CONF_PATH/s/${CMAKE_INSTALL_PREFIX}\///' awesomeConfig.cmake || die
 
-	if use doc; then
-		emake doc || die
-	fi
+}
+
+src_compile() {
+	mycmakeargs="${mycmakeargs}
+	  $(cmake-utils_use_with imlib IMLIB2)
+	  $(cmake-utils_use_with dbus DBUS)
+	"
+	cmake-utils_src_compile
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "emake install failed"
+	cmake-utils_src_install
+
+	mv "${D}"/usr/etc "${D}"/etc || die
 
 	exeinto /etc/X11/Sessions
-	newexe "${FILESDIR}"/${PN}-session ${PN}
+	newexe "${FILESDIR}"/${PN}-session ${PN} || die
 
 	insinto /usr/share/xsessions
-	doins "${FILESDIR}"/${PN}.desktop
+	doins "${FILESDIR}"/${PN}.desktop || die
 
 	insinto /usr/share/awesome/icons
-	doins -r icons/*
+	doins -r icons/* || die
 
 	if use doc; then
-		dohtml doc/html/*
+		dohtml doc/html/* || die
 	fi
-
-	prepalldocs
 }
