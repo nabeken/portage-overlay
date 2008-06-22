@@ -35,7 +35,7 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	x11-proto/xineramaproto
 	x11-proto/xcb-proto
-	>=dev-util/cmake-2.6
+	>=dev-util/cmake-2.4
 	doc? (
 		app-doc/doxygen
 		media-gfx/graphviz
@@ -71,6 +71,7 @@ src_install() {
 	cmake-utils_src_install
 
 	mv "${D}"/usr/etc "${D}"/etc || die
+	rm -rf "${D}"/usr/share/doc/${PN} || die
 
 	exeinto /etc/X11/Sessions
 	newexe "${FILESDIR}"/${PN}-session ${PN} || die
