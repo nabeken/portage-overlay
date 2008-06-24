@@ -13,7 +13,7 @@ SRC_URI=""
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="dbus doc imlib"
 
 RDEPEND=">=x11-libs/libxcb-1.1
@@ -56,6 +56,10 @@ src_unpack() {
 	git_src_unpack
 	cd "${S}"
 	sed -i -e '/AWESOME_CONF_PATH/s/${CMAKE_INSTALL_PREFIX}\///' awesomeConfig.cmake || die
+
+	if [ ! -f .version_stamp ] ; then
+		echo -n "v${PV}-gentoo-overlay" > .version_stamp
+	fi
 
 }
 
