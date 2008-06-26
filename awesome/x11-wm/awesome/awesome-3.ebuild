@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-wm/awesome/awesome-2.3.ebuild,v 1.1 2008/05/06 13:47:36 matsuu Exp $
 
+EAPI=1
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
 
 inherit cmake-utils git
@@ -14,7 +15,7 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="dbus doc imlib"
+IUSE="dbus +doc imlib"
 
 RDEPEND=">=x11-libs/libxcb-1.1
 	>=x11-libs/xcb-util-9999
@@ -30,15 +31,16 @@ RDEPEND=">=x11-libs/libxcb-1.1
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	dev-lang/python
-	app-text/asciidoc
-	app-text/xmlto
 	dev-util/pkgconfig
 	x11-proto/xineramaproto
 	x11-proto/xcb-proto
 	>=dev-util/cmake-2.4.7
 	doc? (
+		app-text/asciidoc
+		app-text/xmlto
 		app-doc/doxygen
 		media-gfx/graphviz
+		dev-util/luadoc
 	)"
 
 DOCS="AUTHORS BUGS README STYLE"
@@ -65,16 +67,30 @@ src_unpack() {
 
 src_compile() {
 	mycmakeargs="${mycmakeargs}
-	  $(cmake-utils_use_with imlib IMLIB2)
-	  $(cmake-utils_use_with dbus DBUS)
+		-DSYSCONFDIR=/etc
+		$(cmake-utils_use_with imlib IMLIB2)
+		$(cmake-utils_use_with dbus DBUS)
 	"
+
+	if use doc ; then
+		mycmakeargs="${mycmakeargs}
+			-DGENERATE_MANPAGES=ON
+			-DGENERATE_LUADOC=ON
+		"
+	else
+		mycmakeargs="${mycmakeargs}
+			-DGENERATE_MANPAGES=OFF
+			-DGENERATE_LUADOC=OFF
+		"
+	fi
+
 	cmake-utils_src_compile
 }
 
 src_install() {
 	cmake-utils_src_install
 
-	mv "${D}"/usr/etc "${D}"/etc || die
+#	mv "${D}"/usr/etc "${D}"/etc || die
 	rm -rf "${D}"/usr/share/doc/${PN} || die
 
 	exeinto /etc/X11/Sessions
@@ -82,11 +98,4 @@ src_install() {
 
 	insinto /usr/share/xsessions
 	doins "${FILESDIR}"/${PN}.desktop || die
-
-	insinto /usr/share/awesome/icons
-	doins -r icons/* || die
-
-	if use doc; then
-		dohtml doc/html/* || die
-	fi
 }
