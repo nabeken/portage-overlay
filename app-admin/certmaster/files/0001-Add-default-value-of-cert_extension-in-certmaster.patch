@@ -1,0 +1,22 @@
+From 73840166dd547b1df3a4f3e7dbf2648e2be55614 Mon Sep 17 00:00:00 2001
+From: TANABE Ken-ichi <nabeken@tknetworks.org>
+Date: Sat, 28 Jun 2008 15:48:19 +0900
+Subject: [PATCH] Add default value of 'cert_extension' in certmaster.conf
+
+---
+ etc/certmaster.conf |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/etc/certmaster.conf b/etc/certmaster.conf
+index 724e3ea..f522a4d 100644
+--- a/etc/certmaster.conf
++++ b/etc/certmaster.conf
+@@ -7,4 +7,5 @@ cadir = /etc/pki/certmaster/ca
+ cert_dir = /etc/pki/certmaster
+ certroot = /var/lib/certmaster/certmaster/certs
+ csrroot = /var/lib/certmaster/certmaster/csrs
++cert_extension = cert
+ 
+-- 
+1.5.4.5
+

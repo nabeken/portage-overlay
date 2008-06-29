@@ -1,0 +1,78 @@
+From 485a8491a5b8688dd9646ff1fce243fb59b92336 Mon Sep 17 00:00:00 2001
+From: TANABE Ken-ichi <nabeken@tknetworks.org>
+Date: Sat, 28 Jun 2008 12:36:08 +0900
+Subject: [PATCH] Add IPv6 support using socket.getaddrinfo()
+
+---
+ func/SSLCommon.py |   40 +++++++++++++++++++++++++++++-----------
+ 1 files changed, 29 insertions(+), 11 deletions(-)
+
+diff --git a/func/SSLCommon.py b/func/SSLCommon.py
+index 6959749..6a474e1 100644
+--- a/func/SSLCommon.py
++++ b/func/SSLCommon.py
+@@ -74,18 +74,22 @@ class BaseSSLServer(BaseServer):
+ 
+         BaseServer.__init__(self, server_address, req_handler)
+ 
+-        sock = socket.socket(self.address_family, self.socket_type)
++        port = server_address[1]
++        info = socket.getaddrinfo(None, port, socket.AF_UNSPEC, self.socket_type, 0, socket.AI_PASSIVE)
++        sock = socket.socket(*info[0][:3])
+         con = SSL.Connection(self.ssl_ctx, sock)
+         self.socket = SSLConnection.SSLConnection(con)
++
+         if sys.version_info[:3] >= (2, 3, 0):
+             self.socket.settimeout(self._timeout)
+-        self.server_bind()
+-        self.server_activate()
+ 
+-        host, port = self.socket.getsockname()[:2]
++        host = self.socket.getsockname()[0]
+         self.server_name = socket.getfqdn(host)
+         self.server_port = port
+ 
++        self.server_bind()
++        self.server_activate()
++
+ 
+ class HTTPSConnection(httplib.HTTPConnection):
+     "This class allows communication via SSL."
+@@ -98,13 +102,27 @@ class HTTPSConnection(httplib.HTTPConnection):
+         self._timeout = timeout
+ 
+     def connect(self):
+-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+-        con = SSL.Connection(self.ssl_ctx, sock)
+-        self.sock = SSLConnection.SSLConnection(con)
+-        if sys.version_info[:3] >= (2, 3, 0):
+-            self.sock.settimeout(self._timeout)
+-        self.sock.connect((self.host, self.port))
+-
++        for res in socket.getaddrinfo(self.host, self.port, socket.AF_UNSPEC, socket.SOCK_STREAM):
++            af, socktype, proto, canonname, sa = res
++
++            try:
++                sock = socket.socket(af, socktype, proto)
++                con = SSL.Connection(self.ssl_ctx, sock)
++                self.sock = SSLConnection.SSLConnection(con)
++
++                if sys.version_info[:3] >= (2, 3, 0):
++                    self.sock.settimeout(self._timeout)
++
++                self.sock.connect(sa)
++            except socket.error, msg:
++                if self.sock:
++                    self.sock.close()
++                sock = None
++                continue
++            break
++
++        if not self.sock:
++            raise socket.error, msg
+ 
+ class HTTPS(httplib.HTTP):
+     """Compatibility with 1.5 httplib interface
+-- 
+1.5.4.5
+
