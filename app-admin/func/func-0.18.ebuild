@@ -11,7 +11,7 @@ SRC_URI="http://people.fedoraproject.org/~mdehaan/files/func/${P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
-IUSE="ipv6 puppet"
+IUSE="doc ipv6 puppet"
 
 RDEPEND="dev-lang/python"
 DEPEND="${RDEPEND}

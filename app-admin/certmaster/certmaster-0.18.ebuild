@@ -11,6 +11,7 @@ SRC_URI="http://people.fedoraproject.org/~mdehaan/files/certmaster/${P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
+IUSE="doc"
 
 RDEPEND="dev-lang/python"
 DEPEND="${RDEPEND}
