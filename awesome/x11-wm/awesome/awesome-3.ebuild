@@ -2,7 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/x11-wm/awesome/awesome-2.3.ebuild,v 1.1 2008/05/06 13:47:36 matsuu Exp $
 
-EAPI=1
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
 
 inherit cmake-utils git
@@ -15,7 +14,7 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="dbus +doc imlib"
+IUSE="dbus doc imlib"
 
 RDEPEND=">=x11-libs/libxcb-1.1
 	>=x11-libs/xcb-util-9999
@@ -35,15 +34,15 @@ DEPEND="${RDEPEND}
 	x11-proto/xineramaproto
 	x11-proto/xcb-proto
 	>=dev-util/cmake-2.4.7
+	app-text/asciidoc
+	app-text/xmlto
 	doc? (
-		app-text/asciidoc
-		app-text/xmlto
 		app-doc/doxygen
 		media-gfx/graphviz
 		dev-util/luadoc
 	)"
 
-DOCS="AUTHORS BUGS README STYLE"
+DOCS="AUTHORS BUGS README"
 
 pkg_setup() {
 	if ! built_with_use --missing false x11-libs/cairo xcb; then
@@ -57,7 +56,6 @@ pkg_setup() {
 src_unpack() {
 	git_src_unpack
 	cd "${S}"
-	sed -i -e '/AWESOME_CONF_PATH/s/${CMAKE_INSTALL_PREFIX}\///' awesomeConfig.cmake || die
 
 	if [ ! -f .version_stamp ] ; then
 		echo -n "v${PV}-gentoo-overlay" > .version_stamp
@@ -66,6 +64,8 @@ src_unpack() {
 }
 
 src_compile() {
+	local myargs="all"
+
 	mycmakeargs="${mycmakeargs}
 		-DSYSCONFDIR=/etc
 		$(cmake-utils_use_with imlib IMLIB2)
@@ -73,24 +73,21 @@ src_compile() {
 	"
 
 	if use doc ; then
-		mycmakeargs="${mycmakeargs}
-			-DGENERATE_MANPAGES=ON
-			-DGENERATE_LUADOC=ON
-		"
+		mycmakeargs="${mycmakeargs} -DGENERATE_LUADOC=ON"
+		myargs="${myargs} doc"
 	else
-		mycmakeargs="${mycmakeargs}
-			-DGENERATE_MANPAGES=OFF
-			-DGENERATE_LUADOC=OFF
-		"
+		mycmakeargs="${mycmakeargs} -DGENERATE_LUADOC=OFF"
 	fi
-
-	cmake-utils_src_compile
+	cmake-utils_src_compile ${myargs}
 }
 
 src_install() {
 	cmake-utils_src_install
 
-#	mv "${D}"/usr/etc "${D}"/etc || die
+	if use doc ; then
+		dohtml -r "${WORKDIR}"/${PN}_build/doc/html/* || die
+		mv "${D}"/usr/share/doc/${PN}/luadoc "${D}"/usr/share/doc/${PF}/html/luadoc || die
+	fi
 	rm -rf "${D}"/usr/share/doc/${PN} || die
 
 	exeinto /etc/X11/Sessions
