@@ -13,9 +13,10 @@ SLOT="0"
 KEYWORDS="~x86 ~amd64"
 IUSE="doc ipv6"
 
-RDEPEND="dev-lang/python"
-DEPEND="${RDEPEND}
+RDEPEND="dev-lang/python
+	dev-python/certmaster
 	dev-python/pyopenssl"
+DEPEND="${RDEPEND}"
 
 src_unpack() {
 	distutils_src_unpack
