@@ -14,7 +14,7 @@ KEYWORDS="~x86 ~amd64"
 IUSE="doc ipv6"
 
 RDEPEND="dev-lang/python
-	dev-python/certmaster
+	app-admin/certmaster
 	dev-python/pyopenssl"
 DEPEND="${RDEPEND}"
 
