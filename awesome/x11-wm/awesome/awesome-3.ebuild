@@ -1,6 +1,6 @@
 # Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-wm/awesome/awesome-2.3.ebuild,v 1.1 2008/05/06 13:47:36 matsuu Exp $
+# $Header: $
 
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
 
@@ -51,16 +51,6 @@ pkg_setup() {
 		eerror "enabled."
 		die "Missing xcb useflag on x11-libs/cairo."
 	fi
-}
-
-src_unpack() {
-	git_src_unpack
-	cd "${S}"
-
-	if [ ! -f .version_stamp ] ; then
-		echo -n "v${PV}-gentoo-overlay" > .version_stamp
-	fi
-
 }
 
 src_compile() {
