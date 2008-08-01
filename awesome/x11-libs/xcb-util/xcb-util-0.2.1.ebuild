@@ -3,14 +3,13 @@
 # $Header: $
 
 # Must be before x-modular eclass is inherited
-SNAPSHOT="yes"
+#SNAPSHOT="yes"
 
 inherit x-modular
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/util"
 
 DESCRIPTION="X C-language Bindings sample implementations"
 HOMEPAGE="http://xcb.freedesktop.org/"
-#SRC_URI="http://xcb.freedesktop.org/dist/${P}.tar.bz2"
+SRC_URI="http://xcb.freedesktop.org/dist/${P}.tar.bz2"
 
 LICENSE="X11"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"

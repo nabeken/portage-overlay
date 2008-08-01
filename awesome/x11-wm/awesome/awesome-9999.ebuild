@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="dbus doc imlib"
 
 RDEPEND=">=x11-libs/libxcb-1.1
-	>=x11-libs/xcb-util-9999
+	>=x11-libs/xcb-util-0.2.1
 	x11-libs/cairo
 	>=dev-libs/glib-2
 	dev-libs/libev
