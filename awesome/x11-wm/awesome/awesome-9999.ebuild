@@ -4,7 +4,7 @@
 
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
 
-inherit cmake-utils git
+inherit cmake-utils eutils git
 
 DESCRIPTION="A dynamic floating and tiling window manager"
 HOMEPAGE="http://awesome.naquadah.org/"
@@ -41,6 +41,9 @@ DEPEND="${RDEPEND}
 		media-gfx/graphviz
 		dev-util/luadoc
 	)"
+
+RDEPEND="${RDEPEND}
+	app-shells/bash"
 
 DOCS="AUTHORS BUGS README"
 
