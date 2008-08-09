@@ -29,9 +29,6 @@ RDEPEND=">=x11-libs/libxcb-1.1
 
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
-	dev-lang/python
-	dev-util/pkgconfig
-	x11-proto/xineramaproto
 	x11-proto/xcb-proto
 	>=dev-util/cmake-2.4.7
 	app-text/asciidoc
