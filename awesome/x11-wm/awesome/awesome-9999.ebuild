@@ -23,9 +23,9 @@ RDEPEND=">=x11-libs/libxcb-1.1
 	dev-libs/libev
 	>=dev-lang/lua-5.1
 	x11-libs/pango
-	>=x11-libs/gtk+-2.2
 	dbus? ( >=sys-apps/dbus-1 )
-	imlib? ( media-libs/imlib2 )"
+	imlib? ( media-libs/imlib2 )
+	!imlib? ( >=x11-libs/gtk+-2.2 )"
 
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
