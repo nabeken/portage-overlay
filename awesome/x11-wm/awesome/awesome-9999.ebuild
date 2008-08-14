@@ -31,7 +31,7 @@ RDEPEND=">=x11-libs/libxcb-1.1
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	x11-proto/xcb-proto
-	>=dev-util/cmake-2.4.7
+	>=dev-util/cmake-2.6
 	app-text/asciidoc
 	app-text/xmlto
 	doc? (
@@ -58,10 +58,10 @@ src_compile() {
 	local myargs="all"
 
 	mycmakeargs="${mycmakeargs}
-		-DSYSCONFDIR=/etc
+		-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=1
+		-DCMAKE_BUILD_WITH_INSTALL_RPATH=1
 		$(cmake-utils_use_with imlib IMLIB2)
-		$(cmake-utils_use_with dbus DBUS)
-	"
+		$(cmake-utils_use_with dbus DBUS)"
 
 	if use doc ; then
 		mycmakeargs="${mycmakeargs} -DGENERATE_LUADOC=ON"
