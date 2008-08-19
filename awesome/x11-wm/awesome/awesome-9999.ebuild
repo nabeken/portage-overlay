@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=1
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
 
 inherit cmake-utils eutils git
@@ -14,7 +15,7 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="dbus doc imlib"
+IUSE="dbus doc +imlib"
 
 RDEPEND=">=x11-libs/libxcb-1.1
 	x11-libs/libX11
@@ -83,7 +84,4 @@ src_install() {
 
 	exeinto /etc/X11/Sessions
 	newexe "${FILESDIR}"/${PN}-session ${PN} || die
-
-	insinto /usr/share/xsessions
-	doins "${FILESDIR}"/${PN}.desktop || die
 }
