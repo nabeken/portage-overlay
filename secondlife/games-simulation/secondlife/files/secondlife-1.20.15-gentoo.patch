@@ -1,0 +1,158 @@
+diff -Naur linden.orig/indra/SConstruct linden/indra/SConstruct
+--- linden.orig/indra/SConstruct	2008-08-01 01:16:43.000000000 +0900
++++ linden/indra/SConstruct	2008-08-29 01:00:19.000000000 +0900
+@@ -118,7 +118,7 @@
+ standalone = optenv['STANDALONE']
+ runtests = optenv['RUNTESTS']
+ opensource = standalone or optenv['OPENSOURCE']
+-enable_fmod = not opensource and optenv['FMOD']
++enable_fmod = optenv['FMOD']
+ elfio = optenv['ELFIO']
+ 
+ targets = [ target_param ]
+@@ -163,6 +163,9 @@
+     'libssl',
+     ]
+ 
++if enable_gstreamer:
++    standalone_pkgs += [ 'gstreamer-0.10' ]
++
+ def pkgconfig(opt, pkgs=None):
+     if pkgs is None:
+         pkgs = standalone_pkgs + standalone_net_pkgs
+@@ -303,9 +306,9 @@
+             if standalone:
+                 include_dirs += [d[2:] for d in
+                                  pkgconfig('--cflags-only-I').split()]
+-		client_external_libs += [ 'boost_program_options-gcc34-mt', 'boost_signals-gcc34-mt', 'boost_regex-gcc34-mt']
++		client_external_libs += [ 'boost_program_options-mt', 'boost_signals-mt', 'boost_regex-mt']
+             else:
+-                client_external_libs += [ 'fontconfig', 'gtk-x11-2.0', 'atk-1.0', 'gmodule-2.0', 'gdk-x11-2.0', 'gdk_pixbuf-2.0', 'pango-1.0', 'pangoft2-1.0', 'pangox-1.0', 'pangoxft-1.0', 'Xinerama', 'boost_program_options-gcc34-mt', 'boost_signals-gcc34-mt', 'boost_regex-gcc34-mt' ]
++                client_external_libs += [ 'fontconfig', 'gtk-x11-2.0', 'atk-1.0', 'gmodule-2.0', 'gdk-x11-2.0', 'gdk_pixbuf-2.0', 'pango-1.0', 'pangoft2-1.0', 'pangox-1.0', 'pangoxft-1.0', 'Xinerama', 'boost_program_options-mt', 'boost_signals-mt', 'boost_regex-mt' ]
+                 incdirs = [ 'ELFIO', 'atk-1.0', 'glib-2.0', 'gtk-2.0',
+                             'llfreetype2', 'pango-1.0' ]
+                 include_dirs += ['../libraries/' + system_str + '/include/' + d
+@@ -648,7 +651,7 @@
+                                   pkgconfig('--libs-only-l', ['gtk+-2.0']).split()]
+             else:
+                 external_libs = net_external_libs + [ 'db-4.2', 'gtk-x11-2.0' ]
+-            external_libs += ['boost_signals-gcc34-mt']
++            external_libs += ['boost_signals-mt']
+             internal_libs = [ 'llui', 'llxml', 'llmessage', 'llvfs', 'llmath', 'llcommon' ]
+             create_executable(output_crashlogger_bin + '-globalsyms',
+                               'linux_crash_logger',
+diff -Naur linden.orig/indra/llcommon/llhash.h linden/indra/llcommon/llhash.h
+--- linden.orig/indra/llcommon/llhash.h	2008-08-01 01:16:43.000000000 +0900
++++ linden/indra/llcommon/llhash.h	2008-08-27 08:53:56.000000000 +0900
+@@ -38,7 +38,9 @@
+ #include <hash_map>
+ #include <algorithm>
+ #elif LL_DARWIN || LL_LINUX
+-#  if GCC_VERSION >= 30400 // gcc 3.4 and up
++#  if GCC_VERSION >= 40300 // gcc 4.3 and up
++#    include <backward/hashtable.h>
++#  elif GCC_VERSION >= 30400 // gcc 3.4 and up
+ #    include <ext/hashtable.h>
+ #  elif __GNUC__ >= 3
+ #    include <ext/stl_hashtable.h>
+diff -Naur linden.orig/indra/llimagej2coj/llimagej2coj.cpp linden/indra/llimagej2coj/llimagej2coj.cpp
+--- linden.orig/indra/llimagej2coj/llimagej2coj.cpp	2008-08-01 01:16:44.000000000 +0900
++++ linden/indra/llimagej2coj/llimagej2coj.cpp	2008-08-24 18:08:31.000000000 +0900
+@@ -33,7 +33,7 @@
+ #include "llimagej2coj.h"
+ 
+ // this is defined so that we get static linking.
+-#include "openjpeg/openjpeg.h"
++#include "openjpeg.h"
+ 
+ #include "lltimer.h"
+ #include "llmemory.h"
+diff -Naur linden.orig/indra/llmath/llmath.h linden/indra/llmath/llmath.h
+--- linden.orig/indra/llmath/llmath.h	2008-08-01 01:16:44.000000000 +0900
++++ linden/indra/llmath/llmath.h	2008-08-27 02:10:52.000000000 +0900
+@@ -34,6 +34,7 @@
+ 
+ #include <cmath>
+ //#include <math.h>
++#include <cstdlib>
+ //#include <stdlib.h>
+ #include "lldefs.h"
+ 
+diff -Naur linden.orig/indra/llmath/llquaternion.cpp linden/indra/llmath/llquaternion.cpp
+--- linden.orig/indra/llmath/llquaternion.cpp	2008-08-01 01:16:44.000000000 +0900
++++ linden/indra/llmath/llquaternion.cpp	2008-08-24 18:08:31.000000000 +0900
+@@ -796,22 +796,22 @@
+ 	{
+ 	default:
+ 	case LLQuaternion::XYZ:
+-		p = "XYZ";
++		strcpy(p, "XYZ");
+ 		break;
+ 	case LLQuaternion::YZX:
+-		p = "YZX";
++		strcpy(p, "YZX");
+ 		break;
+ 	case LLQuaternion::ZXY:
+-		p = "ZXY";
++		strcpy(p, "ZXY");
+ 		break;
+ 	case LLQuaternion::XZY:
+-		p = "XZY";
++		strcpy(p, "XZY");
+ 		break;
+ 	case LLQuaternion::YXZ:
+-		p = "YXZ";
++		strcpy(p, "YXZ");
+ 		break;
+ 	case LLQuaternion::ZYX:
+-		p = "ZYX";
++		strcpy(p, "ZYX");
+ 		break;
+ 	}
+ 	return p;
+diff -Naur linden.orig/indra/llmedia/llmediaimplexample1.cpp linden/indra/llmedia/llmediaimplexample1.cpp
+--- linden.orig/indra/llmedia/llmediaimplexample1.cpp	2008-08-01 01:16:44.000000000 +0900
++++ linden/indra/llmedia/llmediaimplexample1.cpp	2008-08-27 10:23:20.000000000 +0900
+@@ -35,6 +35,7 @@
+ // register this impl with media manager factory
+ static LLMediaImplRegister sLLMediaImplExample1Reg( "LLMediaImplExample1", new LLMediaImplExample1Maker() );
+ 
++#include <cstring>
+ #include <iostream>
+ 
+ #include <time.h>
+diff -Naur linden.orig/indra/llmedia/llmediaimplexample2.cpp linden/indra/llmedia/llmediaimplexample2.cpp
+--- linden.orig/indra/llmedia/llmediaimplexample2.cpp	2008-08-01 01:16:44.000000000 +0900
++++ linden/indra/llmedia/llmediaimplexample2.cpp	2008-08-27 10:24:12.000000000 +0900
+@@ -35,6 +35,7 @@
+ // register this impl with media manager factory
+ static LLMediaImplRegister sLLMediaImplExample2Reg( "LLMediaImplExample2", new LLMediaImplExample2Maker() );
+ 
++#include <cstring>
+ #include <iostream>
+ #include <time.h>
+ 
+diff -Naur linden.orig/indra/newview/llmutelist.cpp linden/indra/newview/llmutelist.cpp
+--- linden.orig/indra/newview/llmutelist.cpp	2008-08-01 01:16:49.000000000 +0900
++++ linden/indra/newview/llmutelist.cpp	2008-08-28 01:09:29.000000000 +0900
+@@ -451,7 +451,7 @@
+ 
+ void notify_automute_callback(const LLUUID& agent_id, const char* first_name, const char* last_name, BOOL is_group, void* user_data)
+ {
+-	U32 temp_data = (U32)user_data;
++	U32 temp_data = (U32)(uintptr_t)user_data;
+ 	LLMuteList::EAutoReason reason = (LLMuteList::EAutoReason)temp_data;
+ 	LLUIString auto_message;
+ 
+diff -Naur linden.orig/indra/newview/llvoiceclient.cpp linden/indra/newview/llvoiceclient.cpp
+--- linden.orig/indra/newview/llvoiceclient.cpp	2008-08-01 01:16:49.000000000 +0900
++++ linden/indra/newview/llvoiceclient.cpp	2008-08-24 18:08:31.000000000 +0900
+@@ -39,7 +39,7 @@
+ #include "llvoavatar.h"
+ #include "llbufferstream.h"
+ #include "llfile.h"
+-#include "expat/expat.h"
++#include "expat.h"
+ #include "llcallbacklist.h"
+ #include "llviewerregion.h"
+ #include "llviewernetwork.h"		// for gGridChoice

@@ -4,18 +4,18 @@
 
 inherit games toolchain-funcs
 
-MY_PV="${PV/*_rc/RC-${PV/_rc}}"
+MY_PV="Branch_1-20-Viewer-2-r92456"
+MY_DATE="2008/07"
 DESCRIPTION="A 3D MMORPG virtual world entirely built and owned by its residents"
 HOMEPAGE="http://secondlife.com/"
-SRC_URI="http://secondlife.com/developers/opensource/downloads/2007/11/slviewer-src-${MY_PV}.tar.gz
-	http://secondlife.com/developers/opensource/downloads/2007/11/slviewer-artwork-${MY_PV}.zip
-	http://secondlife.com/developers/opensource/downloads/2007/11/slviewer-linux-libs-${MY_PV}.tar.gz"
+SRC_URI="http://secondlife.com/developers/opensource/downloads/${MY_DATE}/slviewer-src-${MY_PV}.tar.gz
+	http://secondlife.com/developers/opensource/downloads/${MY_DATE}/slviewer-artwork-${MY_PV}.zip
+	http://secondlife.com/developers/opensource/downloads/${MY_DATE}/slviewer-linux-libs-${MY_PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="debug elfio fmod gstreamer"
-#IUSE="debug elfio fmod gstreamer kdu mozlib"
+IUSE="debug elfio fmod gstreamer kdu vivox"
 RESTRICT="mirror"
 
 RDEPEND=">=x11-libs/gtk+-2
@@ -37,11 +37,11 @@ RDEPEND=">=x11-libs/gtk+-2
 	>=dev-libs/xmlrpc-epi-0.51-r1
 	elfio? ( dev-libs/elfio )
 	>=media-libs/openjpeg-1.1.1
-	media-fonts/kochi-substitute
 	net-dns/c-ares
+	x11-libs/pango
+	net-libs/llmozlib2
 	gstreamer? ( >=media-libs/gst-plugins-base-0.10 )
 	debug? ( dev-libs/google-perftools )"
-#	mozlib? ( net-libs/llmozlib-xulrunner )
 
 DEPEND="${RDEPEND}
 	>=dev-util/scons-0.97
@@ -58,12 +58,12 @@ pkg_config() {
 		if use fmod ; then
 			ewarn "fmod USE flag is only available on x86."
 		fi
-#		if use kdu ; then
-#			ewarn "kdu USE flag is only available on x86."
-#		fi
-#		if use mozlib ; then
-#			ewarn "mozlib USE flag is only available on x86."
-#		fi
+		if use kdu ; then
+			ewarn "kdu USE flag is only available on x86."
+		fi
+		if use vivox ; then
+			ewarn "vivox USE flag is only available on x86."
+		fi
 	fi
 }
 
@@ -71,15 +71,13 @@ src_unpack() {
 	# unpack font files
 	unpack slviewer-linux-libs-${MY_PV}.tar.gz
 
-#	if use kdu ; then
-#		find linden/libraries -type f -a ! -name '*kdu*' | xargs rm -f || die
-#	else
+	if use kdu ; then
+		find linden/libraries -type f -a ! -name '*kdu*' | xargs rm -f || die
+	else
 		rm -rf linden/libraries
-#	fi
+	fi
 
-#	if ! use mozlib ; then
-		rm -rf linden/indra/newview/app_settings
-#	fi
+	rm -rf linden/indra/newview/app_settings
 
 	unpack slviewer-src-${MY_PV}.tar.gz
 	unpack slviewer-artwork-${MY_PV}.zip
@@ -87,12 +85,13 @@ src_unpack() {
 	cd "${S}"
 
 	epatch "${FILESDIR}"/${P}-gentoo.patch
-	epatch "${FILESDIR}"/${PN}-1.17.2.0-size_t.patch
+	epatch "${FILESDIR}"/VWR-3480.patch
 
 	sed -i \
 		-e "s|gcc_bin = .*$|gcc_bin = '$(tc-getCXX)'|" \
 		-e "/_cflags =/s|-O2|${CFLAGS}|" \
 		-e "/_cxxflags =/s|-O2|${CXXFLAGS}|" \
+		-e "/lib_path =/s|$| + ['/usr/$(get_libdir)/llmozlib2']|" \
 		"${S}"/SConstruct || die
 
 	# "${S}"/newview/viewer_manifest.py
@@ -101,7 +100,7 @@ src_unpack() {
 
 src_compile() {
 	local myarch
-	local myopts="BUILD=release BTARGET=client DISTCC=no"
+	local myopts="BTARGET=client DISTCC=no STANDALONE=yes MOZLIB2=yes"
 
 	if use debug ; then
 		myopts="${myopts} BUILD=debug"
@@ -137,19 +136,20 @@ src_compile() {
 	esac
 
 	if [ "${ARCH}" == "x86" ] ; then
-		if use fmod; then
-			myopts="${myopts} FMOD=yes OPENSOURCE=no"
+		if use fmod ; then
+			myopts="${myopts} FMOD=yes"
 		else
-			myopts="${myopts} FMOD=no OPENSOURCE=yes"
+			myopts="${myopts} FMOD=no"
 		fi
 
-#		if use mozlib ; then
-#			myopts="${myopts} MOZLIB=yes STANDALONE=no"
-#		else
-			myopts="${myopts} MOZLIB=no STANDALONE=yes"
-#		fi
+		if use kdu ; then
+			myopts="${myopts} OPENSOURCE=no"
+		else
+			myopts="${myopts} OPENSOURCE=yes"
+		fi
+
 	else
-		myopts="${myopts} FMOD=no MOZLIB=no STANDALONE=yes OPENSOURCE=yes"
+		myopts="${myopts} FMOD=no OPENSOURCE=yes"
 	fi
 
 	TEMP_BUILD_DIR= scons ${myopts} || die
@@ -159,13 +159,14 @@ src_install() {
 	cd "${S}"/newview/
 
 	insinto "${dir}"
-	doins gpu_table.txt gridargs.dat secondlife-i686.supp featuretable_linux.txt || die
-	doins -r app_settings character fonts skins res-sdl || die
+	doins gpu_table.txt gridargs.dat featuretable_linux.txt || die
+	doins -r app_settings character fonts skins res* || die
 
 	doins lsl_guide.html releasenotes.txt || die
 	newins licenses-linux.txt licenses.txt || die
 	newins linux_tools/client-readme.txt README-linux.txt || die
-	newins res/ll_icon.ico secondlife.ico || die
+	newins linux_tools/client-readme-voice.txt README-linux-voice.txt || die
+	newins res/ll_icon.png secondlife_icon.png || die
 
 	insinto "${dir}"/app_settings/
 	doins "${WORKDIR}"/linden/scripts/messages/message_template.msg || die
@@ -173,6 +174,7 @@ src_install() {
 
 	exeinto "${dir}"
 	doexe linux_tools/launch_url.sh || die
+	doexe linux_tools/*_secondlifeprotocol.sh || die
 	newexe linux_tools/wrapper.sh secondlife || die
 	newexe ../linux_crash_logger/linux-crash-logger-*-bin* linux-crash-logger.bin || die
 
@@ -182,15 +184,21 @@ src_install() {
 	exeinto "${dir}"/lib
 	doexe ../lib_*_client/*-linux/lib* || die
 
-	dosym /usr/share/fonts/kochi-substitute/kochi-mincho-subst.ttf /usr/share/games/secondlife/unicode.ttf
+	if use vivox ; then
+		exeinto "${dir}"
+		doexe vivox-runtime/i686-linux/SLVoice || die
+		exeinto "${dir}/vivox-runtime/i686-linux"
+		doexe vivox-runtime/i686-linux/lib* || die
+	fi
 
 	games_make_wrapper secondlife ./secondlife "${dir}"
-	newicon res/ll_icon.ico secondlife.ico || die
-	make_desktop_entry secondlife "Second Life" secondlife.ico
+	newicon res/ll_icon.png secondlife_icon.png || die
+	make_desktop_entry secondlife "Second Life" secondlife_icon.png
 
 	dodoc releasenotes.txt
 	newdoc licenses-linux.txt licenses.txt
 	newdoc linux_tools/client-readme.txt README-linux.txt
+	newdoc linux_tools/client-readme-voice.txt README-linux-voice.txt
 
 	dohtml lsl_guide.html
 

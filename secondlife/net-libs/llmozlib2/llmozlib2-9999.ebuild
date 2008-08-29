@@ -14,9 +14,11 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND=">=sys-devel/binutils-2.16.1
+RDEPEND=">=sys-devel/binutils-2.16.1
 	>=dev-libs/nss-3.11.8
 	>=dev-libs/nspr-4.6.8"
+DEPEND="${RDEPEND}
+	dev-util/cvs"
 
 src_unpack() {
 	subversion_src_unpack
@@ -50,13 +52,14 @@ src_compile() {
 src_install() {
 	local MOZARCH="$(uname -m)-linux"
 
-	dolib.a libllmozlib2.a || die
+	dolib.a libllmozlib2.a  || die
 
 	insopts -m0755
 	insinto "/usr/$(get_libdir)/${PN}"
 	for f in "${S}"/libraries/${MOZARCH}/runtime_release/*; do 
 		doins -r "${f}"
 	done
+	doins "${S}"/libraries/${MOZARCH}/lib_release/libprofdirserviceprovider_s.a
 
 	dodoc README-linux*
 }
