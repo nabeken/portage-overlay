@@ -191,7 +191,7 @@ src_install() {
 		doexe vivox-runtime/i686-linux/lib* || die
 	fi
 
-	games_make_wrapper secondlife ./secondlife "${dir}"
+	games_make_wrapper secondlife ./secondlife "${dir}" "/usr/$(get_libdir)/llmozlib2"
 	newicon res/ll_icon.png secondlife_icon.png || die
 	make_desktop_entry secondlife "Second Life" secondlife_icon.png
 
