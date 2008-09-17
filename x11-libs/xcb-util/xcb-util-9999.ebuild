@@ -5,7 +5,7 @@
 # Must be before x-modular eclass is inherited
 SNAPSHOT="yes"
 
-inherit git x-modular
+inherit x-modular
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/util"
 
 DESCRIPTION="X C-language Bindings sample implementations"
@@ -14,11 +14,13 @@ HOMEPAGE="http://xcb.freedesktop.org/"
 
 LICENSE="X11"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
+IUSE="test"
 
 RDEPEND=">=x11-libs/libxcb-1"
 DEPEND="${RDEPEND}
-	>=dev-util/gperf-3
-	x11-proto/xproto"
+	>=dev-util/gperf-3.0.1
+	x11-proto/xproto
+	test? ( >=dev-libs/check-0.9.4 )"
 
 pkg_postinst() {
 	x-modular_pkg_postinst

@@ -9,12 +9,12 @@ inherit cmake-utils eutils git
 
 DESCRIPTION="A dynamic floating and tiling window manager"
 HOMEPAGE="http://awesome.naquadah.org/"
-#SRC_URI="http://awesome.naquadah.org/download/${P}.tar.gz"
+#SRC_URI="http://awesome.naquadah.org/download/${P}.tar.bz2"
 SRC_URI=""
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86 ~x86-fbsd"
+KEYWORDS="~amd64 ~ppc64 ~x86 ~x86-fbsd"
 IUSE="dbus doc +imlib"
 
 RDEPEND=">=dev-lang/lua-5.1
@@ -26,7 +26,7 @@ RDEPEND=">=dev-lang/lua-5.1
 	x11-libs/libX11
 	>=x11-libs/libxcb-1.1
 	x11-libs/pango
-	>=x11-libs/xcb-util-0.2.1
+	>=x11-libs/xcb-util-0.3
 	dbus? ( >=sys-apps/dbus-1 )
 	imlib? ( media-libs/imlib2 )
 	!imlib? ( >=x11-libs/gtk+-2.2 )"
@@ -46,7 +46,7 @@ DEPEND="${RDEPEND}
 RDEPEND="${RDEPEND}
 	app-shells/bash"
 
-DOCS="AUTHORS BUGS README"
+DOCS="AUTHORS BUGS PATCHES README STYLE"
 
 pkg_setup() {
 	if ! built_with_use --missing false x11-libs/cairo xcb; then
@@ -61,8 +61,6 @@ src_compile() {
 	local myargs="all"
 
 	mycmakeargs="${mycmakeargs}
-		-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=1
-		-DCMAKE_BUILD_WITH_INSTALL_RPATH=1
 		$(cmake-utils_use_with imlib IMLIB2)
 		$(cmake-utils_use_with dbus DBUS)"
 
