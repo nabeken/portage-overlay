@@ -1,0 +1,74 @@
+diff -Naur libvirt-0.4.5-old/configure.in libvirt-0.4.5-new/configure.in
+--- libvirt-0.4.5-old/configure.in	2008-09-08 05:47:18.000000000 -0700
++++ libvirt-0.4.5-new/configure.in	2008-09-18 19:17:33.000000000 -0700
+@@ -693,7 +693,42 @@
+     [Location or name of the showmount program])
+ fi
+ 
+-AC_PATH_PROG([QEMU_IMG], [qemu-img], [], [$PATH:/sbin:/usr/sbin:/bin:/usr/bin])
++AC_MSG_CHECKING([path the of the binary for qemu])
++AC_ARG_WITH([qemu-path], [AC_HELP_STRING([--with-qemu-path=[path of binary|/usr/bin/qemu]], [Path of the qemu binary])])
++if test "x$with_qemu_path" == "x" ; then
++    QEMU_BIN="/usr/bin/qemu"
++else
++    QEMU_BIN="$with_qemu_path"
++fi
++AC_SUBST([QEMU_BIN])
++AC_MSG_RESULT($QEMU_BIN)
++AC_DEFINE_UNQUOTED([QEMU_BIN],["$QEMU_BIN"],
++      [Path of the qemu program])
++
++AC_MSG_CHECKING([path the of the binary for qemu-kvm])
++AC_ARG_WITH([qemu-kvm-path], [AC_HELP_STRING([--with-qemu-kvm-path=[path of binary|/usr/bin/qemu-kvm]], [Path of the qemu-kvm binary])])
++if test "x$with_qemu_kvm_path" == "x" ; then
++    KVM_BIN="/usr/bin/qemu-kvm"
++else
++    KVM_BIN="$with_qemu_kvm_path"
++fi
++AC_SUBST([KVM_BIN])
++AC_MSG_RESULT($KVM_BIN)
++AC_DEFINE_UNQUOTED([KVM_BIN],["$KVM_BIN"],
++      [Name of the qemu-kvm program])
++
++AC_MSG_CHECKING([name the disk image binary for qemu is])
++AC_ARG_WITH([qemu-img-path], [AC_HELP_STRING([--with-qemu-img-path=[name of binary|qemu-img]], [Name of the qemu-img binary])])
++if test "x$with_qemu_img_name" == "x" ; then
++    QEMU_IMG_BIN="qemu-img"
++else
++    QEMU_IMG_BIN="$with_qemu_img_name"
++fi
++AC_SUBST([QEMU_IMG_BIN])
++AC_MSG_RESULT($QEMU_IMG_BIN)
++
++AC_PATH_PROG([QEMU_IMG], [$QEMU_IMG_BIN], [], [$PATH:/sbin:/usr/sbin:/bin:/usr/bin])
++
+ if test -n "$QEMU_IMG" ; then
+   AC_DEFINE_UNQUOTED([HAVE_QEMU_IMG], 1, [whether qemu-img is available for non-raw files])
+   AC_DEFINE_UNQUOTED([QEMU_IMG],["$QEMU_IMG"],
+diff -Naur libvirt-0.4.5-old/src/qemu_conf.c libvirt-0.4.5-new/src/qemu_conf.c
+--- libvirt-0.4.5-old/src/qemu_conf.c	2008-09-05 07:24:59.000000000 -0700
++++ libvirt-0.4.5-new/src/qemu_conf.c	2008-09-18 19:21:33.000000000 -0700
+@@ -235,7 +235,8 @@
+     samearch = STREQ(info->arch, hostmachine);
+     if (samearch) {
+         const char *const kvmbins[] = { "/usr/bin/qemu-kvm", /* Fedora */
+-                                        "/usr/bin/kvm" }; /* Upstream .spec */
++                                        "/usr/bin/kvm",
++					KVM_BIN }; /* Upstream .spec */
+ 
+         for (i = 0; i < ARRAY_CARDINALITY(kvmbins); ++i) {
+             if ((haskvm = (access(kvmbins[i], X_OK) == 0))) {
+diff -Naur libvirt-0.4.5-old/src/qemu_driver.c libvirt-0.4.5-new/src/qemu_driver.c
+--- libvirt-0.4.5-old/src/qemu_driver.c	2008-09-08 05:34:24.000000000 -0700
++++ libvirt-0.4.5-new/src/qemu_driver.c	2008-09-18 19:20:56.000000000 -0700
+@@ -1750,7 +1750,9 @@
+ {
+     if ((virFileExists("/usr/bin/qemu")) ||
+         (virFileExists("/usr/bin/qemu-kvm")) ||
+-        (virFileExists("/usr/bin/xenner"))) {
++        (virFileExists("/usr/bin/xenner")) ||
++	(virFileExists(QEMU_BIN)) ||
++	(virFileExists(KVM_BIN))) {
+         if (getuid() == 0) {
+             return("qemu:///system");
+         } else {
