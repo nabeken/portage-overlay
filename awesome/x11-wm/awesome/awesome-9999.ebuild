@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI="2"
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
 
 inherit cmake-utils eutils git
@@ -13,7 +14,8 @@ SRC_URI=""
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc64 ~x86 ~x86-fbsd"
+KEYWORDS="~amd64 ~ppc ~ppc64 ~x86 ~x86-fbsd"
+#IUSE="dbus doc +imlib bash-completion"
 IUSE="dbus doc"
 
 RDEPEND=">=dev-lang/lua-5.1
@@ -21,8 +23,8 @@ RDEPEND=">=dev-lang/lua-5.1
 	dev-libs/libev
 	dev-util/gperf
 	sys-libs/ncurses
-	x11-libs/cairo
-	x11-libs/libX11
+	x11-libs/cairo[xcb]
+	x11-libs/libX11[xcb]
 	>=x11-libs/libxcb-1.1
 	x11-libs/pango
 	>=x11-libs/xcb-util-0.3
@@ -59,19 +61,11 @@ RDEPEND="${RDEPEND}
 		media-gfx/xli
 		x11-apps/xsetroot
 	)"
-# media-gfx/qiv (media-gfx/pqiv doesn't work)
-# x11-misc/chbg #68116
+#		media-gfx/qiv (media-gfx/pqiv doesn't work)
+#		x11-misc/chbg #68116
+#	bash-completion? ( app-shells/bash-completion )
 
 DOCS="AUTHORS BUGS PATCHES README STYLE"
-
-pkg_setup() {
-	if ! built_with_use --missing false x11-libs/cairo xcb; then
-		eerror "This package you need the useflag xcb enabled on x11-libs/cairo."
-		eerror "Please emerge x11-libs/cairo again with the xcb useflag"
-		eerror "enabled."
-		die "Missing xcb useflag on x11-libs/cairo."
-	fi
-}
 
 src_compile() {
 	local myargs="all"
