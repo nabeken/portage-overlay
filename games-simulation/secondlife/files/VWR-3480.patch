@@ -1,0 +1,30 @@
+diff -Naur linden.orig/indra/llcommon/llares.cpp linden/indra/llcommon/llares.cpp
+--- linden.orig/indra/llcommon/llares.cpp	2008-04-08 11:37:54.000000000 +0900
++++ linden/indra/llcommon/llares.cpp	2008-05-19 08:35:30.000000000 +0900
+@@ -120,7 +120,7 @@
+ 		ares_cancel(chan_);
+ }
+ 
+-static void host_callback(void *arg, int status, struct hostent *ent)
++static void host_callback(void *arg, int status, int timeouts, struct hostent *ent)
+ {
+ 	LLPointer<LLAres::HostResponder> *resp =
+ 		(LLPointer<LLAres::HostResponder> *) arg;
+@@ -388,7 +388,7 @@
+ 			<< LLAres::strerror(code) << llendl;
+ }
+ 
+-static void nameinfo_callback(void *arg, int status, char *node, char *service)
++static void nameinfo_callback(void *arg, int status, int timeouts, char *node, char *service)
+ {
+ 	LLPointer<LLAres::NameInfoResponder> *resp =
+ 		(LLPointer<LLAres::NameInfoResponder> *) arg;
+@@ -415,7 +415,7 @@
+ 					 new LLPointer<NameInfoResponder>(resp));
+ }
+ 
+-static void search_callback(void *arg, int status, unsigned char *abuf,
++static void search_callback(void *arg, int status, int timeouts, unsigned char *abuf,
+ 							int alen)
+ {
+ 	LLPointer<LLAres::QueryResponder> *resp =

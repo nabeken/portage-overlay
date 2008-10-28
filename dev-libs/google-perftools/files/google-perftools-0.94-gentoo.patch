@@ -1,0 +1,11 @@
+diff -Naur google-perftools-0.94.orig/src/stacktrace_libunwind-inl.h google-perftools-0.94/src/stacktrace_libunwind-inl.h
+--- google-perftools-0.94.orig/src/stacktrace_libunwind-inl.h	2007-10-19 01:05:15.000000000 +0900
++++ google-perftools-0.94/src/stacktrace_libunwind-inl.h	2007-12-01 08:51:01.000000000 +0900
+@@ -38,6 +38,7 @@
+ }
+ #include "google/stacktrace.h"
+ #include "base/spinlock.h"
++#include "base/logging.h"
+ 
+ // Sometimes, we can try to get a stack trace from within a stack
+ // trace, because libunwind can call mmap/sbrk (maybe indirectly via
