@@ -208,7 +208,7 @@ src_unpack() {
 		epatch "${FILESDIR}"/NVIDIA_i2c-hwmon.patch
 	fi
 
-	if use kernel_linux && kernel_is gt 2 6 28; then
+	if use kernel_linux && kernel_is gt 2 6 27; then
 		epatch "${FILESDIR}"/NVIDIA_2.6.28.patch
 	fi
 
