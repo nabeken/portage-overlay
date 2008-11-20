@@ -26,9 +26,9 @@ DEPEND=">=dev-lang/perl-5.8.2-r1
 	>=dev-perl/Net-DNS-0.53
 	dev-perl/Digest-SHA1
 	dev-perl/libwww-perl
-	>=dev-perl/Archive-Tar-1.26
+	>=virtual/perl-Archive-Tar-1.26
 	app-crypt/gnupg
-	>=dev-perl/IO-Zlib-1.04
+	>=virtual/perl-IO-Zlib-1.04
 	>=dev-util/re2c-0.12.0
 	ssl? (
 		dev-perl/IO-Socket-SSL
