@@ -58,9 +58,9 @@ src_unpack() {
 	unpack ${A}
 	cd "${S}"
 
+	epatch "${FILESDIR}/${P}-usermod-fix.patch"
 	epatch "${FILESDIR}/${PN}-0.24.2-gentoo.patch"
 	epatch "${FILESDIR}/${P}-eix.patch"
-	epatch "${FILESDIR}/${P}-usermod-fix.patch"
 }
 
 src_compile() {
