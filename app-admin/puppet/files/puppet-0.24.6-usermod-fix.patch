@@ -1,15 +1,3 @@
-commit b415848841edac9b08ff604416ad2e24dd350b4d
-Author: Luke Kanies <luke@madstop.com>
-Date:   Mon Nov 24 12:17:52 2008 -0600
-
-    Fixing #1708 - user groups specified as names are now detected correctly.
-    
-    There was a bug when groups were specified by name -- the group was
-    always compared to the current gid, rather than being converted to an
-    integer and comparing that way.  This is now fixed.
-    
-    Signed-off-by: Luke Kanies <luke@madstop.com>
-
 diff --git a/lib/puppet/type/user.rb b/lib/puppet/type/user.rb
 index 637fe9b..0fe7928 100755
 --- a/lib/puppet/type/user.rb
