@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI=2
 EGIT_REPO_URI="git://git.naquadah.org/awesome.git"
 
 inherit cmake-utils eutils git
@@ -15,7 +15,7 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86 ~x86-fbsd"
-#IUSE="dbus doc +imlib bash-completion"
+#IUSE="dbus doc bash-completion"
 IUSE="dbus doc"
 
 RDEPEND=">=dev-lang/lua-5.1
@@ -52,6 +52,7 @@ RDEPEND="${RDEPEND}
 	)
 	|| (
 		x11-terms/eterm
+		x11-misc/habak
 		x11-wm/windowmaker
 		media-gfx/feh
 		x11-misc/hsetroot
