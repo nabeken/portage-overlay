@@ -26,7 +26,7 @@ RDEPEND=">=dev-lang/lua-5.1
 	x11-libs/cairo[xcb]
 	x11-libs/libX11[xcb]
 	>=x11-libs/libxcb-1.1
-	x11-libs/pango
+	>=x11-libs/pango-1.19.3
 	>=x11-libs/xcb-util-0.3
 	media-libs/imlib2
 	dbus? ( >=sys-apps/dbus-1 )"
@@ -87,8 +87,10 @@ src_install() {
 	cmake-utils_src_install
 
 	if use doc ; then
-		dohtml -r "${WORKDIR}"/${PN}_build/doc/html/* || die
-		mv "${D}"/usr/share/doc/${PN}/luadoc "${D}"/usr/share/doc/${PF}/html/luadoc || die
+		(
+			cd "${WORKDIR}"/${PN}_build/doc/html/ && dohtml -r * || die
+			mv "${D}"/usr/share/doc/${PN}/luadoc "${D}"/usr/share/doc/${PF}/html/luadoc || die
+		)
 	fi
 	rm -rf "${D}"/usr/share/doc/${PN} || die
 
