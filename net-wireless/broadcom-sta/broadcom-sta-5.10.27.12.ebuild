@@ -7,8 +7,8 @@ inherit eutils linux-mod
 MY_PV="${PV//./_}"
 DESCRIPTION="Broadcom 802.11 Linux STA driver"
 HOMEPAGE="http://www.broadcom.com/support/802.11/linux_sta.php"
-SRC_URI="x86? ( http://www.broadcom.com/docs/linux_sta/hybrid-portsrc-x86_32_${MY_PV}.tar.gz )
-	amd64? ( http://www.broadcom.com/docs/linux_sta/hybrid-portsrc-x86_64_${MY_PV}.tar.gz )"
+SRC_URI="x86? ( http://www.broadcom.com/docs/linux_sta/hybrid-portsrc-x86-32_${MY_PV}.tar.gz )
+	amd64? ( http://www.broadcom.com/docs/linux_sta/hybrid-portsrc-x86-64_${MY_PV}.tar.gz )"
 
 LICENSE="Broadcom"
 SLOT="0"
@@ -29,9 +29,4 @@ pkg_setup() {
 	else
 		die "please use a kernel >=2.6.6"
 	fi
-}
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-	epatch "${FILESDIR}/${P}-gentoo.patch"
 }
