@@ -1,0 +1,7 @@
+# /etc/conf.d/remedie: config file for /etc/init.d/remedie
+#
+# specifies the port number it listens to. Default: 10010
+#REMEDIE_PORT="10010"
+#
+# specifies the host address it binds to (e.g. 127.0.0.1). Default to any address.
+#REMEDIE_HOST="127.0.0.1"

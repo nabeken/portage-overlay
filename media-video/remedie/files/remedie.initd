@@ -1,0 +1,35 @@
+#!/sbin/runscript
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+REMEDIE_EXEC="/usr/bin/remedie-server.pl"
+REMEDIE_PIDFILE="/var/run/remedie.pid"
+
+depend() {
+	need net
+}
+
+start() {
+	local REMEDIE_OPTS
+	if [ "${REMEDIE_PORT}" != "" ]; then
+		REMEDIE_OPTS="${REMEDIE_OPTS} --port ${REMEDIE_PORT}"
+	fi
+	if [ "${REMEDIE_HOST}" != "" ]; then
+		REMEDIE_OPTS="${REMEDIE_OPTS} --host ${REMEDIE_HOST}"
+	fi
+
+	ebegin "Starting Remedie"
+	start-stop-daemon --start --quiet --background --make-pidfile \
+		--pidfile "${REMEDIE_PIDFILE}" --exec "${REMEDIE_EXEC}" \
+		-- ${REMEDIE_OPTS}
+	sleep 3
+	kill -0 $(cat "${REMEDIE_PIDFILE}")
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping Remedie"
+	start-stop-daemon --stop --quiet --pidfile "${REMEDIE_PIDFILE}"
+	eend $?
+}
