@@ -5,6 +5,7 @@
 
 REMEDIE_EXEC="/usr/bin/remedie-server.pl"
 REMEDIE_PIDFILE="/var/run/remedie.pid"
+REMEDIE_DIR="/var/lib/remedie"
 
 depend() {
 	need net
@@ -21,8 +22,8 @@ start() {
 
 	ebegin "Starting Remedie"
 	start-stop-daemon --start --quiet --background --make-pidfile \
-		--pidfile "${REMEDIE_PIDFILE}" --exec "${REMEDIE_EXEC}" \
-		-- ${REMEDIE_OPTS}
+		--pidfile "${REMEDIE_PIDFILE}" --chdir "${REMEDIE_DIR}" \
+		--exec "${REMEDIE_EXEC}" -- ${REMEDIE_OPTS}
 	sleep 3
 	kill -0 $(cat "${REMEDIE_PIDFILE}")
 	eend $?

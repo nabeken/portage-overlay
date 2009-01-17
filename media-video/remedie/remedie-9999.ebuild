@@ -85,7 +85,7 @@ GCPAN_MODULES="
 pkg_setup() {
 	local req_modules
 	for module in ${GCPAN_MODULES}; do
-		if ! has_version "perl-gcpan/${module}"; then
+		if ! has_version "dev-perl/$module" && ! has_version "perl-gcpan/${module}"; then
 			req_modules="${req_modules} ${module}"
 		fi
 	done
@@ -105,6 +105,10 @@ src_install() {
 	perl-module_src_install
 
 	dobin bin/remedie-server.pl
+
+	insinto /var/lib/remedie
+	doins -r root
+
 	newinitd "${FILESDIR}/${PN}.initd" ${PN}
 	newconfd "${FILESDIR}/${PN}.confd" ${PN}
 
