@@ -92,7 +92,7 @@ pkg_setup() {
 	if [ -n "${req_modules}" ]; then
 		eerror "Please install following modules by g-cpan"
 		eerror
-		eerror "${req_modules//-/::}"
+		eerror "g-cpan -i ${req_modules//-/::}"
 		die
 	fi
 }
