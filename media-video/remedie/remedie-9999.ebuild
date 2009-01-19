@@ -14,7 +14,9 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="dev-perl/Class-Accessor
+RDEPEND="
+	dev-perl/Cache-Cache
+	dev-perl/Class-Accessor
 	dev-perl/DateTime
 	dev-perl/DateTime-Format-ISO8601
 	dev-perl/DateTime-Format-Mail
@@ -49,6 +51,7 @@ RDEPEND="dev-perl/Class-Accessor
 	dev-perl/XML-Feed
 	dev-perl/yaml
 	dev-perl/YAML-Syck"
+#	dev-perl/File-ShareDir
 
 DEPEND="${RDEPEND}
 	virtual/perl-Test-Simple"
@@ -68,6 +71,7 @@ GCPAN_MODULES="
 	HTML-TreeBuilder-XPath
 	HTTP-Engine
 	Module-Install
+	Module-Install-AuthorTests
 	MooseX-ClassAttribute
 	MooseX-ConfigFromFile
 	MooseX-Getopt
@@ -81,6 +85,7 @@ GCPAN_MODULES="
 	XML-LibXML-Simple
 	XML-RSS-LibXML
 	XML-OPML-LibXML"
+#	DateTime-Format-Japanese
 
 pkg_setup() {
 	local req_modules
