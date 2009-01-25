@@ -1,0 +1,22 @@
+--- a/vboxdrv/linux/SUPDrv-linux.c 2008-12-29 16:15:53.000000000 +0000
++++ b/vboxdrv/linux/SUPDrv-linux.c        2009-01-04 00:02:20.346070537 +0000
+@@ -703,7 +703,7 @@
+     /*
+      * Only root is allowed to access the device, enforce it!
+      */
+-    if (current->euid != 0 /* root */ )
++    if (current->cred->euid != 0 /* root */ )
+     {
+         Log(("VBoxDrvLinuxCreate: euid=%d, expected 0 (root)\n", current->euid));
+         return -EPERM;
+@@ -716,8 +716,8 @@
+     rc = supdrvCreateSession(&g_DevExt, true /* fUser */, (PSUPDRVSESSION *)&pSession);
+     if (!rc)
+     {
+-        pSession->Uid = current->uid;
+-        pSession->Gid = current->gid;
++        pSession->Uid = current->cred->uid;
++        pSession->Gid = current->cred->gid;
+     }
+
+     pFilp->private_data = pSession; 
