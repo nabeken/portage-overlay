@@ -1,0 +1,19 @@
+--- configure.orig	2008-12-23 16:34:42.000000000 +0100
++++ configure	2008-12-23 16:35:26.000000000 +0100
+@@ -389,16 +389,6 @@
+         fail really
+       elif [ $cc_maj -eq 4 -a $cc_min -eq 0 -a "OS" = "darwin" ]; then
+         log_success "found version $cc_ver"
+-      elif [ $cc_maj -eq 4 -a $cc_min -eq 3 ]; then
+-        if [ -z "$CC_COMPAT" ]; then
+-          log ""
+-          log "  ** There are known problems with gcc version 4.3 when compiling the recompiler"
+-          log "  ** stuff. You need to specify a compatibility compiler with version < 4.3. Look"
+-          log "  ** for a package compat-gcc-34 on Fedora systems or something similar on other"
+-          log "  ** distributions and call configure with parameter --with-gcc-compat=gcc34."
+-          fail really
+-        fi
+-        log_success "found version $cc_ver + compat version $cc_compat_ver"
+       # gcc-4.0 is allowed for Darwin only
+       elif [ $cc_maj -lt 3 \
+              -o \( $cc_maj -eq 3 -a $cc_min -lt 2 \) \

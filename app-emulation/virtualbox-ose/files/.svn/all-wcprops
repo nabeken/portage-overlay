@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/dev/jokey/!svn/ver/573/trunk/app-emulation/virtualbox-ose/files
+END
+virtualbox-ose-1-wrapper
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/dev/jokey/!svn/ver/519/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-1-wrapper
+END
+virtualbox-ose-2-localconfig
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/dev/jokey/!svn/ver/572/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-2-localconfig
+END
+virtualbox-ose-2-wrapper
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/dev/jokey/!svn/ver/519/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-2-wrapper
+END
+virtualbox-ose-1.6.6-remove-unused.patch
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/dev/jokey/!svn/ver/476/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-1.6.6-remove-unused.patch
+END
+virtualbox-ose-1-config
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/dev/jokey/!svn/ver/519/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-1-config
+END
+virtualbox-ose-interfaces
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/dev/jokey/!svn/ver/453/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-interfaces
+END
+virtualbox-ose-2-config
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/dev/jokey/!svn/ver/519/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-2-config
+END
+virtualbox-ose-fix-2.6.28-headers.patch
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/dev/jokey/!svn/ver/573/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-fix-2.6.28-headers.patch
+END
+virtualbox-ose-fix-insecure-lockfiles.patch
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/dev/jokey/!svn/ver/532/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-fix-insecure-lockfiles.patch
+END
+virtualbox-ose-2.1.0-allow-gcc43.patch
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/dev/jokey/!svn/ver/563/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose-2.1.0-allow-gcc43.patch
+END
+virtualbox-ose.desktop
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/dev/jokey/!svn/ver/516/trunk/app-emulation/virtualbox-ose/files/virtualbox-ose.desktop
+END
