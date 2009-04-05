@@ -1,0 +1,17 @@
+--- nv.c.orig	2009-04-05 15:32:14.000000000 +0900
++++ nv.c	2009-04-05 15:39:20.000000000 +0900
+@@ -589,14 +589,6 @@
+     if (!proc_nvidia_warnings)
+         goto failed;
+ 
+-    /*
+-     * Set the module owner to ensure that the reference
+-     * count reflects accesses to the proc files.
+-     */
+-    proc_nvidia->owner = THIS_MODULE;
+-    proc_nvidia_cards->owner = THIS_MODULE;
+-    proc_nvidia_warnings->owner = THIS_MODULE;
+-
+     for (j = 0; j < num_nv_devices; j++)
+     {
+         nvl = &nv_linux_devices[j];
