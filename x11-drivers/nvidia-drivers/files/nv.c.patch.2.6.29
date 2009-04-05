@@ -1,6 +1,15 @@
---- nv.c.orig	2009-04-05 15:32:14.000000000 +0900
-+++ nv.c	2009-04-05 15:39:20.000000000 +0900
-@@ -589,14 +589,6 @@
+diff -ru usr.old/src/nv/nv.c usr/src/nv/nv.c
+--- usr.old/src/nv/nv.c	2009-04-05 15:50:56.000000000 +0900
++++ usr/src/nv/nv.c	2009-04-05 15:53:44.000000000 +0900
+@@ -374,7 +374,6 @@
+ /* character driver entry points */
+ 
+ static struct file_operations nv_fops = {
+-    .owner     = THIS_MODULE,
+     .poll      = nv_kern_poll,
+     .ioctl     = nv_kern_ioctl,
+ #if defined(HAVE_UNLOCKED_IOCTL)
+@@ -589,14 +588,6 @@
      if (!proc_nvidia_warnings)
          goto failed;
  
@@ -15,3 +24,66 @@
      for (j = 0; j < num_nv_devices; j++)
      {
          nvl = &nv_linux_devices[j];
+@@ -615,7 +606,6 @@
+ 
+         entry->data = nv;
+         entry->read_proc = nv_kern_read_cardinfo;
+-        entry->owner = THIS_MODULE;
+ 
+         if (nv_find_pci_capability(dev, PCI_CAP_ID_AGP))
+         {
+@@ -629,7 +619,6 @@
+                 goto failed;
+             }
+ 
+-            entry->owner = THIS_MODULE;
+             proc_nvidia_agp = entry;
+ 
+             entry = create_proc_entry("status", flags, proc_nvidia_agp);
+@@ -640,7 +629,6 @@
+ 
+             entry->data = nv;
+             entry->read_proc = nv_kern_read_status;
+-            entry->owner = THIS_MODULE;
+ 
+             entry = create_proc_entry("host-bridge", flags, proc_nvidia_agp);
+             if (!entry) {
+@@ -650,7 +638,6 @@
+ 
+             entry->data = NULL;
+             entry->read_proc = nv_kern_read_agpinfo;
+-            entry->owner = THIS_MODULE;
+ 
+             entry = create_proc_entry("card", flags, proc_nvidia_agp);
+             if (!entry) {
+@@ -660,7 +647,6 @@
+ 
+             entry->data = nv;
+             entry->read_proc = nv_kern_read_agpinfo;
+-            entry->owner = THIS_MODULE;
+         }
+ 
+         NV_PCI_DEV_PUT(dev);
+@@ -671,14 +657,12 @@
+         goto failed;
+ 
+     entry->read_proc = nv_kern_read_version;
+-    entry->owner = THIS_MODULE;
+ 
+     entry = create_proc_entry("registry", flags, proc_nvidia);
+     if (!entry)
+         goto failed;
+ 
+     entry->read_proc = nv_kern_read_registry;
+-    entry->owner = THIS_MODULE;
+ 
+     return;
+ 
+@@ -705,7 +689,6 @@
+ 
+     entry->data = (void *)message;
+     entry->read_proc = nv_kern_read_warning;
+-    entry->owner = THIS_MODULE;
+ #endif
+ }
+ 
