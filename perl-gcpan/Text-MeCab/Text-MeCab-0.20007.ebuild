@@ -4,16 +4,16 @@
 
 inherit perl-module
 
-S=${WORKDIR}/Text-MeCab-0.20004
+S=${WORKDIR}/Text-MeCab-0.20007
 
 DESCRIPTION="No description available"
 HOMEPAGE="http://search.cpan.org/search?query=Text-MeCab&mode=dist"
-SRC_URI="mirror://cpan/authors/id/D/DM/DMAKI/Text-MeCab-0.20004.tar.gz"
+SRC_URI="mirror://cpan/authors/id/D/DM/DMAKI/Text-MeCab-0.20007.tar.gz"
 
 
 IUSE=""
 
 SLOT="0"
 LICENSE="|| ( Artistic GPL-2 )"
-KEYWORDS="alpha amd64 arm hppa ia64 m68k mips ppc ppc64 ppc-macos s390 sh sparc sparc-fbsd x86 x86-fbsd"
+KEYWORDS="alpha amd64 amd64-fbsd arm hppa ia64 m68k mips ppc ppc64 s390 sh sparc sparc-fbsd x86 x86-fbsd"
 

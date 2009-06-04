@@ -51,9 +51,9 @@ DEPEND=">=dev-lang/perl-5.8.2-r1
 	)
 
 	cjk? (
-		dev-perl/Encode-Detect
-		app-text/mecab
 		perl-gcpan/Text-MeCab
+		app-text/mecab
+		dev-perl/Encode-Detect
 	)
 
 	ipv6? (
