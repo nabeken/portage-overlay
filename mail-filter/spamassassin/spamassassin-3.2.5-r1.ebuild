@@ -61,6 +61,10 @@ DEPEND=">=dev-lang/perl-5.8.2-r1
 	)"
 
 src_compile() {
+	if use cjk; then
+		epatch "${FILESDIR}"/spamassassin-3.2.5-ja-test1.patch
+	fi
+
 	# - Set SYSCONFDIR explicitly so we can't get bitten by bug 48205 again
 	#   (just to be sure, nobody knows how it could happen in the first place).
 	myconf="SYSCONFDIR=/etc DATADIR=/usr/share/spamassassin"
@@ -118,10 +122,6 @@ src_compile() {
 	rm -f MANIFEST*
 
 	use doc && make text_html_doc
-
-	if use cjk; then
-		epatch "${FILESDIR}"/spamassassin-3.2.5-ja-test1.patch
-	fi
 }
 
 src_install () {
