@@ -50,6 +50,12 @@ DEPEND=">=dev-lang/perl-5.8.2-r1
 		dev-perl/DBD-SQLite
 	)
 
+	cjk? (
+		dev-perl/Encode-Detect
+		app-text/mecab
+		perl-gcpan/Text-MeCab
+	)
+
 	ipv6? (
 		dev-perl/IO-Socket-INET6
 	)"
