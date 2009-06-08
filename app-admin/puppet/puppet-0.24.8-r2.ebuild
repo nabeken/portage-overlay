@@ -41,8 +41,7 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-0.24.6-eix.patch"
-	epatch "${FILESDIR}/${PN}-0.24.8-rc-update-show.patch"
-	epatch "${FILESDIR}/${PN}-0.24.8-rc-update-show-verbose.patch"
+	epatch "${FILESDIR}/${PN}-0.24.8-replacement-rc-update.patch"
 }
 
 src_compile() {
