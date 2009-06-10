@@ -1,82 +1,77 @@
-From 35f4e5a9a80c4555806b330cd7358c69461e0e08 Mon Sep 17 00:00:00 2001
+From a447ced5d5215250968fea48c4125b60eeac040f Mon Sep 17 00:00:00 2001
 From: TANABE Ken-ichi <nabeken@tknetworks.org>
 Date: Mon, 8 Jun 2009 22:44:12 +0900
 Subject: [PATCH] service/gentoo: Managing /etc/runlevels directly for enabling and disabling
 
 ---
- lib/puppet/provider/service/gentoo.rb |   69 ++++++++++++++++++++++-----------
- 1 files changed, 46 insertions(+), 23 deletions(-)
+ lib/puppet/provider/service/gentoo.rb |   66 +++++++++++++++++++-------------
+ 1 files changed, 39 insertions(+), 27 deletions(-)
 
 diff --git a/lib/puppet/provider/service/gentoo.rb b/lib/puppet/provider/service/gentoo.rb
-index d62df1a..be0b8ea 100644
+index d62df1a..f9df199 100644
 --- a/lib/puppet/provider/service/gentoo.rb
 +++ b/lib/puppet/provider/service/gentoo.rb
-@@ -3,12 +3,10 @@
+@@ -3,54 +3,66 @@
  Puppet::Type.type(:service).provide :gentoo, :parent => :init do
      desc "Gentoo's form of ``init``-style service management.
  
 -    Uses ``rc-update`` for service enabling and disabling.
 +    Managing /etc/runlevels/default directly for enabling and disabling.
  
-   "
- 
--    commands :update => "/sbin/rc-update"
+-  "
 -
+-    commands :update => "/sbin/rc-update"
++    "
+ 
      confine :operatingsystem => :gentoo
  
      defaultfor :operatingsystem => :gentoo
-@@ -18,39 +16,64 @@ Puppet::Type.type(:service).provide :gentoo, :parent => :init do
+ 
++    @@levels = []
++
++    begin
++	Dir.open("/etc/runlevels").each do |entry|
++	    @@levels.push entry if File.directory?("/etc/runlevels/#{entry}") and entry =~ /^[^.]/
++	end
++    rescue
++	raise Puppet::Error, "Could not get service names"
++    end
++
+     def self.defpath
+         superclass.defpath
      end
  
      def disable
-+        levels = []
-+
-         begin
+-        begin
 -            output = update :del, @resource[:name], :default
 -        rescue Puppet::ExecutionFailure
 -            raise Puppet::Error, "Could not disable %s: %s" %
 -                [self.name, output]
-+            Dir.open("/etc/runlevels").each do |entry|
-+                levels.push entry if File.directory?("/etc/runlevels/#{entry}") and entry =~ /^[^.]/
-+            end
-+        rescue
-+            raise Puppet::Error, "Could not disable %s" %
-+                [self.name]
-+        end
-+            
-+        levels.each do |l|
++        @@levels.each do |l|
 +            service = "/etc/runlevels/#{l}/#{@resource[:name]}"
 +
 +            if File.exist?(service)
 +                begin
 +                    File.delete(service)
 +                rescue
-+                    raise Puppet::Error, "Could not disable %s" %
-+                        [self.name, output]
++                    raise Puppet::Error, "Could not disable %s" % self.name
 +                end
 +            end
          end
      end
  
      def enabled?
-+        levels = []
-+
-         begin
+-        begin
 -            output = update :show
 -        rescue Puppet::ExecutionFailure
 -            return :false
-+            Dir.open("/etc/runlevels").each do |entry|
-+                levels.push entry if File.directory?("/etc/runlevels/#{entry}") and entry =~ /^[^.]/
-+            end
-+        rescue
-+            raise Puppet::Error, "Could not check whether enabled or disabled %s" %
-+                [self.name]
-         end
- 
--        line = output.split(/\n/).find { |l| l.include?(@resource[:name]) }
+-        end
 -
+-        line = output.split(/\n/).find { |l| l.include?(@resource[:name]) }
++	result = :false
+ 
 -        return :false unless line
-+        levels.each do |l|
++        @@levels.each do |l|
 +            service = "/etc/runlevels/#{l}/#{@resource[:name]}"
  
 -        # If it's enabled then it will print output showing service | runlevel
@@ -85,11 +80,11 @@ index d62df1a..be0b8ea 100644
 -        else
 -            return :false
 +            if File.exist?(service)
-+                return :true
-+            else
-+                return :false
++                result = :true
 +            end
          end
++
++	return result
      end
  
      def enable
@@ -111,5 +106,5 @@ index d62df1a..be0b8ea 100644
      end
  end
 -- 
-1.6.3.1
+1.6.0.6
 
