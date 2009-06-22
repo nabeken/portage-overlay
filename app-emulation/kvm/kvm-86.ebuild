@@ -9,10 +9,7 @@ inherit eutils flag-o-matic toolchain-funcs linux-info
 MY_PN="qemu-${PN}-devel"
 MY_P="${MY_PN}-${PV}"
 
-# Patchset git repo is at http://github.com/dang/kvm-patches/tree/master
-PATCHSET="kvm-patches-20090314"
-SRC_URI="mirror://sourceforge/kvm/${MY_P}.tar.gz
-	http://dev.gentoo.org/~dang/files/${PATCHSET}.tar.gz"
+SRC_URI="mirror://sourceforge/kvm/${MY_P}.tar.gz"
 
 DESCRIPTION="Kernel-based Virtual Machine userland tools"
 HOMEPAGE="http://www.linux-kvm.org"
@@ -87,16 +84,6 @@ src_prepare() {
 	[[ -x /sbin/paxctl ]] && \
 		sed -i 's/^VL_LDFLAGS=$/VL_LDFLAGS=-Wl,-z,execheap/' \
 			qemu/Makefile.target
-
-	# Kernel patch; doesn't apply
-	rm "${WORKDIR}/${PATCHSET}"/07_all_kernel-longmode.patch
-	# evdev patch is upstream
-	rm "${WORKDIR}/${PATCHSET}"/10_all_evdev_keycode_map.patch
-
-	# apply patchset
-	EPATCH_SOURCE="${WORKDIR}/${PATCHSET}"
-	EPATCH_SUFFIX="patch"
-	epatch
 
 	# Fix docs manually
 	sed -i -e 's/QEMU/KVM/g;s/qemu/kvm/g;s/Qemu/Kvm/g;s/kvm-options.texi/qemu-options.texi/' \
