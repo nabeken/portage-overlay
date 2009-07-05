@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit multilib toolchain-funcs
+inherit eutils multilib toolchain-funcs
 
 MY_P="${P/_p/-}"
 DESCRIPTION="TOMOYO Linux tools"
@@ -16,18 +16,26 @@ IUSE=""
 
 DEPEND="sys-libs/ncurses
 	sys-libs/readline"
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	sys-apps/which"
 
 S="${WORKDIR}/ccstools"
 
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
+
+	epatch "${FILESDIR}/${P}-gentoo.patch"
+
 	sed -i \
 		-e "/^CC=/s:gcc:$(tc-getCC):" \
 		-e "/^CFLAGS=/s:-O2:${CFLAGS}:" \
 		-e "s:/usr/lib/:/usr/$(get_libdir)/:g" \
 		Makefile || die
+
+	sed -i \
+		-e "s:/usr/lib/ccs:/usr/$(get_libdir)/ccs:g" \
+		init_policy.sh tomoyo_init_policy.sh || die
 }
 
 src_install() {
