@@ -1,0 +1,536 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..f0a7fee
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,5 @@
++Makefile
++Makefile.old
++blib
++pm_to_blib
++*.tar.gz
+diff --git a/MANIFEST.SKIP b/MANIFEST.SKIP
+index 053ea14..dcd8bf7 100644
+--- a/MANIFEST.SKIP
++++ b/MANIFEST.SKIP
+@@ -1,11 +1,13 @@
+ ~$
+ ^Makefile$
++.git
+ \bCVS\b
+ ^tgz/
+ \.~$
+ \.#
+ \w#$
+ \.bak$
++\.swp$
+ Makefile$
+ Makefile\.old$
+ blib
+diff --git a/Makefile.PL b/Makefile.PL
+index f89cf18..5ffd36e 100644
+--- a/Makefile.PL
++++ b/Makefile.PL
+@@ -7,9 +7,11 @@ my %args =
+    ABSTRACT_FROM => 'lib/Net/Server.pod',
+    AUTHOR        => 'Paul Seamons (paul@seamons.com) and Rob Brown (bbb@cpan.org)',
+    PREREQ_PM  => {
+-     'IO::Socket' => 0,
+-     Socket       => 0,
+-     POSIX        => 0,
++     'IO::Socket'        => 0,
++     'IO::Socket::INET6' => 0,
++     Socket              => 0,
++     Socket6             => 0,
++     POSIX               => 0,
+    },
+ 
+    dist          => {
+diff --git a/README b/README
+index 2f88607..6c280c0 100644
+--- a/README
++++ b/README
+@@ -40,6 +40,7 @@ FEATURES
+      * Protection against buffer overflow
+      * Clean process flow
+      * Extensibility
++     * IPv6 support (New!)
+ 
+ DESCRIPTION
+     "Net::Server" is an extensible, generic Perl server engine.
+diff --git a/lib/Net/Server.pm b/lib/Net/Server.pm
+index ed5765c..596ec83 100644
+--- a/lib/Net/Server.pm
++++ b/lib/Net/Server.pm
+@@ -25,7 +25,8 @@ package Net::Server;
+ 
+ use strict;
+ use vars qw($VERSION);
+-use Socket qw(inet_aton inet_ntoa AF_INET AF_UNIX SOCK_DGRAM SOCK_STREAM);
++use Socket qw(AF_INET AF_UNIX SOCK_DGRAM SOCK_STREAM);
++use Socket6 qw(AF_INET6 NI_DGRAM NI_NUMERICHOST NI_NUMERICSERV AI_PASSIVE getaddrinfo getnameinfo);
+ use IO::Socket ();
+ use IO::Select ();
+ use POSIX ();
+@@ -37,7 +38,7 @@ use Net::Server::Daemonize qw(check_pid_file create_pid_file
+                               safe_fork
+                               );
+ 
+-$VERSION = '0.97';
++$VERSION = '0.97.20091008';
+ 
+ ###----------------------------------------------------------------###
+ 
+@@ -741,43 +742,56 @@ sub get_client_info {
+   }
+ 
+   ### read information about this connection
+-  my $sockname = getsockname( $sock );
++  my $family = $sock->sockdomain;
++  my $sockname = $sock->sockname;
++
+   if( $sockname ){
+-    ($prop->{sockport}, $prop->{sockaddr})
+-      = Socket::unpack_sockaddr_in( $sockname );
+-    $prop->{sockaddr} = inet_ntoa( $prop->{sockaddr} );
++    ($prop->{sockaddr}, $prop->{sockport}) = getnameinfo( $sockname, NI_NUMERICHOST | NI_NUMERICSERV );
+ 
+   }else{
+-    ### does this only happen from command line?
+-    $prop->{sockaddr} = '0.0.0.0';
+-    $prop->{sockhost} = 'inet.test';
+-    $prop->{sockport} = 0;
++      if( $family == AF_INET ){
++	### does this only happen from command line?
++	$prop->{sockaddr} = '0.0.0.0';
++	$prop->{sockhost} = 'inet.test';
++	$prop->{sockport} = 0;
++      } elsif( $family == AF_INET6 ){
++	$prop->{sockaddr} = '::';
++	$prop->{sockhost} = 'inet.test';
++	$prop->{sockport} = 0;
++      }
+   }
+ 
+   ### try to get some info about the remote host
+   my $proto_type = 'TCP';
++
+   if( $prop->{udp_true} ){
+     $proto_type = 'UDP';
+-    ($prop->{peerport} ,$prop->{peeraddr})
+-      = Socket::sockaddr_in( $prop->{udp_peer} );
+-  }elsif( $prop->{peername} = getpeername( $sock ) ){
+-    ($prop->{peerport}, $prop->{peeraddr})
+-      = Socket::unpack_sockaddr_in( $prop->{peername} );
++    ($prop->{peeraddr} ,$prop->{peerport}) = getnameinfo( $prop->{udp_peer}, NI_DGRAM );
++
++  }else{
++    $prop->{peername} = getpeername( $sock );
++    ($prop->{peeraddr}, $prop->{peerport}) = getnameinfo( $prop->{peername}, NI_NUMERICHOST | NI_NUMERICSERV );
+   }
+ 
+   if( $prop->{peername} || $prop->{udp_true} ){
+-    $prop->{peeraddr} = inet_ntoa( $prop->{peeraddr} );
++    #$prop->{peeraddr} = inet_ntoa( $prop->{peeraddr} );
+ 
+     if( defined $prop->{reverse_lookups} ){
+-      $prop->{peerhost} = gethostbyaddr( inet_aton($prop->{peeraddr}), AF_INET );
++      (undef, undef, undef, undef, $prop->{peerhost}) = getaddrinfo( $prop->{peeraddr}, 0 );
+     }
+     $prop->{peerhost} = '' unless defined $prop->{peerhost};
+ 
+   }else{
+-    ### does this only happen from command line?
+-    $prop->{peeraddr} = '0.0.0.0';
+-    $prop->{peerhost} = 'inet.test';
+-    $prop->{peerport} = 0;
++    if( $family == AF_INET ){
++      ### does this only happen from command line?
++      $prop->{peeraddr} = '0.0.0.0';
++      $prop->{peerhost} = 'inet.test';
++      $prop->{peerport} = 0;
++    } elsif( $family == AF_INET6 ){
++      $prop->{peeraddr} = '::';
++      $prop->{peerhost} = 'inet.test';
++      $prop->{peerport} = 0;
++    }
+   }
+ 
+   $self->log(3,$self->log_time
+diff --git a/lib/Net/Server/INET.pm b/lib/Net/Server/INET.pm
+index d16470c..f5f952b 100644
+--- a/lib/Net/Server/INET.pm
++++ b/lib/Net/Server/INET.pm
+@@ -176,6 +176,9 @@ sub DESTROY {}
+ sub FILENO {}
+ 
+ sub FETCH {}
++
++sub sockname {}
++sub sockdomain {}
+ 1;
+ 
+ 
+diff --git a/lib/Net/Server/Proto/TCP.pm b/lib/Net/Server/Proto/TCP.pm
+index 66fdb37..d398471 100644
+--- a/lib/Net/Server/Proto/TCP.pm
++++ b/lib/Net/Server/Proto/TCP.pm
+@@ -24,9 +24,10 @@ package Net::Server::Proto::TCP;
+ use strict;
+ use vars qw($VERSION $AUTOLOAD @ISA);
+ use IO::Socket ();
++use IO::Socket::INET6;
+ 
+ $VERSION = $Net::Server::VERSION; # done until separated
+-@ISA = qw(IO::Socket::INET);
++@ISA = qw(IO::Socket::INET6);
+ 
+ sub object {
+   my $type  = shift;
+@@ -80,9 +81,11 @@ sub connect {
+   my %args = ();
+   $args{LocalPort} = $port;                  # what port to bind on
+   $args{Proto}     = 'tcp';                  # what procol to use
+-  $args{LocalAddr} = $host if $host !~ /\*/; # what local address (* is all)
++
++  # protocol independent
++  $args{LocalAddr} = $host;                  # what local address (* is all)
+   $args{Listen}    = $prop->{listen};        # how many connections for kernel to queue
+-  $args{Reuse}     = 1;  # allow us to rebind the port on a restart
++  $args{Reuse}     = 1;                      # allow us to rebind the port on a restart
+ 
+   ### connect to the sock
+   $sock->SUPER::configure(\%args)
+diff --git a/t/Server_BASE.t b/t/Server_BASE.t
+index 8cea573..939c12d 100644
+--- a/t/Server_BASE.t
++++ b/t/Server_BASE.t
+@@ -23,7 +23,7 @@ print "not ok 2\n" if $@;
+ ### become a new type of server
+ package Net::Server::Test;
+ @ISA = qw(Net::Server);
+-use IO::Socket;
++use IO::Socket::INET6;
+ local $SIG{ALRM} = sub { die };
+ my $alarm = 5;
+ 
+@@ -37,7 +37,7 @@ my $start_port = 20100;
+ my $num_ports  = 3;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -110,7 +110,7 @@ if( $fork && $pipe ){
+       <READ>; ### wait until the child writes to us
+ 
+       ### connect to child
+-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                          PeerPort => $ports[0],
+                                          Proto    => 'tcp');
+       die unless defined $remote;
+@@ -159,7 +159,7 @@ if( $fork && $pipe){
+       <READ>; ### wait until the child writes to us
+ 
+       ### connect to first bound port on child
+-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                          PeerPort => $ports[2],
+                                          Proto    => 'tcp');
+       die unless defined $remote;
+@@ -174,7 +174,7 @@ if( $fork && $pipe){
+ 
+ 
+       ### connect to second bound port on child
+-      $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                       PeerPort => $ports[1],
+                                       Proto    => 'tcp');
+       die unless defined $remote;
+diff --git a/t/Server_Fork.t b/t/Server_Fork.t
+index 01cdc97..3f057de 100644
+--- a/t/Server_Fork.t
++++ b/t/Server_Fork.t
+@@ -20,7 +20,7 @@ print "ok 2 - We can fork $$ ($@)\n";
+ package Net::Server::Test;
+ @ISA = qw(Net::Server::Fork);
+ 
+-use IO::Socket;
++use IO::Socket::INET6;
+ local $SIG{ALRM} = sub { die };
+ my $alarm = 5;
+ 
+@@ -54,7 +54,7 @@ my $start_port = 20200;
+ my $num_ports  = 1;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -111,7 +111,7 @@ if (! $fork || ! $pipe) {
+             <READ>; ### wait until the parent accept writes to us
+ 
+             ### connect to child
+-            my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++            my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                                PeerPort => $ports[0],
+                                                Proto    => 'tcp');
+             die unless defined $remote;
+diff --git a/t/Server_INET.t b/t/Server_INET.t
+index d6c382e..6cb29b5 100644
+--- a/t/Server_INET.t
++++ b/t/Server_INET.t
+@@ -22,7 +22,7 @@ print "not ok 2\n" if $@;
+ ### become a new type of server
+ package Net::Server::Test;
+ @ISA = qw(Net::Server::INET);
+-use IO::Socket;
++use IO::Socket::INET6;
+ local $SIG{ALRM} = sub { die };
+ my $alarm = 5;
+ 
+@@ -57,7 +57,7 @@ my $start_port = 20300;
+ my $num_ports  = 1;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -93,7 +93,7 @@ if( $fork && $pipe ){
+       <READ>; ### wait until the child writes to us
+ 
+       ### connect to child
+-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                          PeerPort => $ports[0],
+                                          Proto    => 'tcp');
+       die unless defined $remote;
+@@ -110,7 +110,7 @@ if( $fork && $pipe ){
+     }else{
+ 
+       ### pretend we're inetd
+-      my $sock = IO::Socket::INET->new(LocalAddr => 'localhost',
++      my $sock = IO::Socket::INET6->new(LocalAddr => 'localhost',
+                                        LocalPort => $ports[0],
+                                        Proto     => 'tcp',
+                                        Listen    => 5,
+diff --git a/t/Server_MultiType.t b/t/Server_MultiType.t
+index 7ce25d2..3055089 100644
+--- a/t/Server_MultiType.t
++++ b/t/Server_MultiType.t
+@@ -23,7 +23,7 @@ print "not ok 2\n" if $@;
+ ### become a new type of server
+ package Net::Server::Test;
+ @ISA = qw(Net::Server::MultiType);
+-use IO::Socket;
++use IO::Socket::INET6;
+ local $SIG{ALRM} = sub { die };
+ my $alarm = 5;
+ 
+@@ -59,7 +59,7 @@ my $start_port = 20400;
+ my $num_ports  = 1;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -107,7 +107,7 @@ if( $fork && $pipe ){
+       <READ>; ### wait until the child writes to us
+ 
+       ### connect to child
+-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                          PeerPort => $ports[0],
+                                          Proto    => 'tcp');
+       die unless defined $remote;
+diff --git a/t/Server_Multiplex.t b/t/Server_Multiplex.t
+index 6710bec..8aaf899 100644
+--- a/t/Server_Multiplex.t
++++ b/t/Server_Multiplex.t
+@@ -17,7 +17,7 @@ END { ok 0 unless $success; }
+ 
+ ### load the module
+ use Net::Server::Multiplex;
+-use IO::Socket;
++use IO::Socket::INET6;
+ ok 1;
+ 
+ @ISA = qw(Net::Server::Multiplex);
+@@ -83,7 +83,7 @@ my $start_port = 20200;
+ my $num_ports  = 1;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -111,7 +111,7 @@ if( $pid ){
+   <READ>; ### wait until the child writes to us
+ 
+   ### connect to child
+-  my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                      PeerPort => $ports[0],
+                                      Proto    => 'tcp');
+   die unless defined $remote;
+diff --git a/t/Server_PreFork.t b/t/Server_PreFork.t
+index 22818ea..44e3379 100644
+--- a/t/Server_PreFork.t
++++ b/t/Server_PreFork.t
+@@ -29,7 +29,7 @@ package Net::Server::Test;
+ use Net::Server::PreFork;
+ 
+ @ISA = qw(Net::Server::PreFork);
+-use IO::Socket;
++use IO::Socket::INET6;
+ local $SIG{ALRM} = sub { die };
+ my $alarm = 5;
+ 
+@@ -67,7 +67,7 @@ my $start_port = 20500;
+ my $num_ports  = 2;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -116,7 +116,7 @@ if( $fork && $pipe){
+       <READ>; ### wait until the child writes to us
+ 
+       ### connect to first bound port on child
+-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                          PeerPort => $ports[0],
+                                          Proto    => 'tcp');
+       die unless defined $remote;
+@@ -131,7 +131,7 @@ if( $fork && $pipe){
+ 
+ 
+       ### connect to second bound port on child
+-      $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                       PeerPort => $ports[1],
+                                       Proto    => 'tcp');
+       die unless defined $remote;
+diff --git a/t/Server_PreForkSimple.t b/t/Server_PreForkSimple.t
+index ec0495f..5fad00e 100644
+--- a/t/Server_PreForkSimple.t
++++ b/t/Server_PreForkSimple.t
+@@ -29,7 +29,7 @@ package Net::Server::Test;
+ use strict;
+ use vars qw(@ISA);
+ use Net::Server::PreForkSimple ();
+-use IO::Socket;
++use IO::Socket::INET6;
+ 
+ @ISA = qw(Net::Server::PreForkSimple);
+ local $SIG{ALRM} = sub { die };
+@@ -68,7 +68,7 @@ my $start_port = 20500;
+ my $num_ports  = 2;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -116,7 +116,7 @@ if( $fork && $pipe){
+       <READ>; ### wait until the child writes to us
+ 
+       ### connect to first bound port on child
+-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                          PeerPort => $ports[0],
+                                          Proto    => 'tcp');
+       die unless defined $remote;
+@@ -131,7 +131,7 @@ if( $fork && $pipe){
+ 
+ 
+       ### connect to second bound port on child
+-      $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                       PeerPort => $ports[1],
+                                       Proto    => 'tcp');
+       die unless defined $remote;
+diff --git a/t/UDP_test.t b/t/UDP_test.t
+index 119ee08..672c1fb 100644
+--- a/t/UDP_test.t
++++ b/t/UDP_test.t
+@@ -23,7 +23,7 @@ print "not ok 2\n" if $@;
+ ### become a new type of server
+ package Net::Server::Test;
+ @ISA = qw(Net::Server);
+-use IO::Socket;
++use IO::Socket::INET6;
+ local $SIG{ALRM} = sub { die "timeout"; };
+ my $alarm = 5;
+ 
+@@ -59,7 +59,7 @@ my $start_port = 20600;
+ my $num_ports  = 1;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -108,7 +108,7 @@ if( $fork && $pipe ){
+       <READ>; ### wait until the child writes to us
+ 
+       ### connect to child under udp
+-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                          PeerPort => $ports[0],
+                                          Proto    => 'udp');
+       ### send a packet, get a packet
+@@ -119,7 +119,7 @@ if( $fork && $pipe ){
+ 
+ 
+       ### connect to child under tcp
+-      $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                       PeerPort => $ports[0],
+                                       Proto    => 'tcp');
+       die "No socket returned" unless defined $remote;
+diff --git a/t/UNIX_test.t b/t/UNIX_test.t
+index e5ffdff..b34249c 100644
+--- a/t/UNIX_test.t
++++ b/t/UNIX_test.t
+@@ -28,7 +28,7 @@ print "not ok 2\n" if $@;
+ package Net::Server::Test;
+ @ISA = qw(Net::Server);
+ 
+-use IO::Socket ();
++use IO::Socket::INET6 ();
+ use POSIX qw(tmpnam);
+ use English qw($UID $GID);
+ 
+@@ -67,7 +67,7 @@ my $start_port = 20700;
+ my $num_ports  = 1;
+ my @ports      = ();
+ for my $i (0..99){
+-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
++  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
+ 				   PeerPort => ($start_port + $i),
+                                    Timeout  => 2,
+ 				   Proto    => 'tcp');
+@@ -125,7 +125,7 @@ if( $fork && $pipe ){
+       die "No line returned" unless $line =~ /Net::Server/;
+ 
+       ### connect to child under tcp
+-      $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
++      $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
+                                       PeerPort => $ports[0],
+                                       Proto    => 'tcp');
+       die "No socket returned [$!]" unless defined $remote;
