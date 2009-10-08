@@ -20,6 +20,8 @@ SRC_TEST="do"
 mydoc="README"
 
 DEPEND="dev-perl/IO-Multiplex
+	dev-perl/IO-Socket-INET6
+	dev-perl/Socket6
 	dev-lang/perl"
 
 src_unpack() {
