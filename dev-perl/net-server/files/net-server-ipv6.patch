@@ -59,7 +59,7 @@ index 2f88607..6c280c0 100644
  DESCRIPTION
      "Net::Server" is an extensible, generic Perl server engine.
 diff --git a/lib/Net/Server.pm b/lib/Net/Server.pm
-index ed5765c..596ec83 100644
+index ed5765c..1dbbf5d 100644
 --- a/lib/Net/Server.pm
 +++ b/lib/Net/Server.pm
 @@ -25,7 +25,8 @@ package Net::Server;
@@ -67,8 +67,8 @@ index ed5765c..596ec83 100644
  use strict;
  use vars qw($VERSION);
 -use Socket qw(inet_aton inet_ntoa AF_INET AF_UNIX SOCK_DGRAM SOCK_STREAM);
-+use Socket qw(AF_INET AF_UNIX SOCK_DGRAM SOCK_STREAM);
-+use Socket6 qw(AF_INET6 NI_DGRAM NI_NUMERICHOST NI_NUMERICSERV AI_PASSIVE getaddrinfo getnameinfo);
++use Socket qw(AF_INET AF_INET6 AF_UNIX SOCK_DGRAM SOCK_STREAM);
++use Socket6 qw(NI_DGRAM NI_NUMERICHOST NI_NUMERICSERV AI_PASSIVE getaddrinfo getnameinfo);
  use IO::Socket ();
  use IO::Select ();
  use POSIX ();
