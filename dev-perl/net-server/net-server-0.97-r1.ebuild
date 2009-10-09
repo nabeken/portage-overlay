@@ -20,7 +20,7 @@ SRC_TEST="do"
 mydoc="README"
 
 DEPEND="dev-perl/IO-Multiplex
-	dev-perl/IO-Socket-INET6
+	>=dev-perl/IO-Socket-INET6-2.56
 	dev-perl/Socket6
 	dev-lang/perl"
 
