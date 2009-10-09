@@ -23,6 +23,7 @@ DEPEND_COM="dev-lang/perl
 			mysql? ( virtual/mysql )
 			postgres? ( dev-perl/DBD-Pg virtual/postgresql-base )
 			irc? ( dev-perl/Net-IRC )
+			ipv6? ( dev-perl/IO-Socket-INET6 )
 			dev-perl/DateManip
 			dev-perl/Net-Netmask
 			dev-perl/Net-SNMP
@@ -82,7 +83,7 @@ src_unpack() {
 	cd "${S}"
 
 	if use ipv6; then
-		epatch "${FILESDIR}"/munin-node.conf-allow-ipv6-localhost.patch
+		epatch "${FILESDIR}"/"${PN}"-ipv6.patch
 	fi
 }
 

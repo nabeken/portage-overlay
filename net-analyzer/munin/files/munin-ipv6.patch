@@ -1,0 +1,40 @@
+diff --git a/node/munin-node.conf.in b/node/munin-node.conf.in
+index 616b221..3502a3b 100644
+--- a/node/munin-node.conf.in
++++ b/node/munin-node.conf.in
+@@ -33,6 +33,7 @@ ignore_file \.pod$
+ # the allow line as many times as you'd like
+ 
+ allow ^127\.0\.0\.1$
++allow ^::1$
+ 
+ # Which address to bind to;
+ host *
+diff --git a/server/munin-update.in b/server/munin-update.in
+index c053a57..abafb84 100755
+--- a/server/munin-update.in
++++ b/server/munin-update.in
+@@ -24,7 +24,7 @@
+ $|=1;
+ 
+ use strict;
+-use IO::Socket;
++use IO::Socket::INET6;
+ use Munin;
+ use Time::HiRes;
+ use RRDs;
+@@ -470,12 +470,12 @@ sub do_node {
+   
+   if (munin_get ($newconf, "local_address"))
+   {
+-      $socket = new IO::Socket::INET ('PeerAddr' => "$newconf->{address}:".
++      $socket = new IO::Socket::INET6 ('PeerAddr' => "$newconf->{address}:".
+ 	          munin_get ($newconf, "port", "4949"), 
+ 		  'LocalAddr' => munin_get ($newconf, "local_address", undef),
+ 		  'Proto'    => "tcp", "Timeout" => munin_get($newconf, "timeout", 60));
+   } else {
+-      $socket = new IO::Socket::INET ('PeerAddr' => "$newconf->{address}:".
++      $socket = new IO::Socket::INET6 ('PeerAddr' => "$newconf->{address}:".
+ 	          munin_get ($newconf, "port", "4949"), 
+ 		  'Proto'    => "tcp", "Timeout" => munin_get($newconf, "timeout", 60));
+   }
