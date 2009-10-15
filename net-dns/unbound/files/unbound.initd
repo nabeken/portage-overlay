@@ -3,52 +3,51 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-opts="start stop reload"
-description="Unbound is a validating, recursive and caching DNS resolver"
-description_start="Start the server"
-description_stop="Stop the server"
-description_reload="Reload the server"
+opts="${opts} checkconfig reload"
 
-config_file=${config_file:-/etc/unbound/unbound.conf}
-my_unbound_checkconf=/usr/sbin/unbound-checkconf
-my_unbound_control=/usr/sbin/unbound-control
-my_unbound_control_setup=/usr/sbin/unbound-control-setup
+UNBOUND_BINARY=${UNBOUND_BINARY:-/usr/sbin/unbound}
+UNBOUND_CHECKCONF=${UNBOUND_CHECKCONF:-/usr/sbin/unbound-checkconf}
+UNBOUND_CONFDIR=${UNBOUND_CONFDIR:-/etc/unbound}
+UNBOUND_CONFFILE=${UNBOUND_CONFFILE:-${UNBOUND_CONFDIR}/${SVCNAME}.conf}
+UNBOUND_PIDFILE=${UNBOUND_PIDFILE:-/var/run/${SVCNAME}.pid}
 
 depend() {
-	provide dns
 	need net
+	use logger
+	provide dns
 	after auth-dns
 }
 
-_checkconf() {
-	if ! ${my_unbound_checkconf} "${config_file}" > /dev/null; then
-		eerror "You have errors in your configfile (${config_file})"
-		return 1
-	fi
-	return 0
-}
-
-_running() {
-	${my_unbound_control} -c ${config_file} status > /dev/null 2>&1
+checkconfig() {
+	"${UNBOUND_CHECKCONF}" "${UNBOUND_CONFFILE}" > /dev/null
+	return $?
 }
 
 start() {
-	_checkconf || return 1
+	checkconfig || return $?
 
 	ebegin "Starting unbound"
-	${my_unbound_control} -c ${config_file} start > /dev/null
-	_running
+	start-stop-daemon --start --pidfile "${UNBOUND_PIDFILE}" \
+		--exec "${UNBOUND_BINARY}" -- -c "${UNBOUND_CONFFILE}"
 	eend $?
 }
 
 stop() {
 	ebegin "Stopping unbound"
-	${my_unbound_control} -c ${config_file} stop > /dev/null
+	start-stop-daemon --stop --pidfile "${UNBOUND_PIDFILE}"
 	eend $?
 }
 
+restart() {
+	checkconfig || return $?
+	svc_stop
+	svc_start
+}
+
 reload() {
+	checkconfig || return $?
 	ebegin "Reloading unbound"
-	${my_unbound_control} -c ${config_file} reload > dev/null
+	start-stop-daemon --stop --pidfile "${UNBOUND_PIDFILE}" \
+		--signal HUP --oknodo
 	eend $?
 }
