@@ -1,0 +1,57 @@
+diff --git a/chef/lib/chef/provider/package.rb b/chef/lib/chef/provider/package.rb
+index 69465e8..c16b907 100644
+--- a/chef/lib/chef/provider/package.rb
++++ b/chef/lib/chef/provider/package.rb
+@@ -33,6 +33,7 @@ class Chef
+       def initialize(new_resource, run_context)
+         super
+         @candidate_version = nil
++        @reinstall = false
+       end
+       
+       def action_install  
+@@ -42,6 +43,9 @@ class Chef
+         # If it's not installed at all, install it
+         elsif @current_resource.version == nil
+           install_version = candidate_version
++        # reinstall it if package already installed
++        elsif @reinstall && @current_resource.version != nil
++          install_version = @current_resource.version
+         else
+           return
+         end
+@@ -62,6 +66,12 @@ class Chef
+           @new_resource.updated_by_last_action(true)
+         end
+       end
++
++      def action_reinstall
++        @reinstall = true
++        Chef::Log.info("Reinstalling #{@new_resource}")
++        action_install
++      end
+       
+       def action_upgrade
+         if @current_resource.version != candidate_version
+@@ -73,7 +83,7 @@ class Chef
+           end
+         end
+       end
+-      
++
+       def action_remove        
+         if removing_package?
+           Chef::Log.info("Removing #{@new_resource}")
+diff --git a/chef/lib/chef/resource/package.rb b/chef/lib/chef/resource/package.rb
+index de792e7..73f7bb2 100644
+--- a/chef/lib/chef/resource/package.rb
++++ b/chef/lib/chef/resource/package.rb
+@@ -32,7 +32,7 @@ class Chef
+         @source = nil
+         @action = :install
+         @options = nil
+-        @allowed_actions.push(:install, :upgrade, :remove, :purge)
++        @allowed_actions.push(:install, :reinstall, :upgrade, :remove, :purge)
+       end
+       
+       def package_name(arg=nil)
