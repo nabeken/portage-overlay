@@ -18,7 +18,8 @@ IUSE="debug gost python static test threads"
 RDEPEND="dev-libs/expat
 	dev-libs/libevent
 	>=dev-libs/openssl-0.9.8
-	>=net-libs/ldns-1.6.5[ssl,gost?]"
+	>=net-libs/ldns-1.6.5[ssl,gost?]
+	net-dns/dnssec-root"
 
 DEPEND="${RDEPEND}
 	python? ( dev-lang/swig )
@@ -58,6 +59,11 @@ src_install() {
 	if use python ; then
 		rm "${ED}/usr/$(get_libdir)"/python*/site-packages/_unbound.*a || die
 	fi
+
+	sed -i -e \
+	's/# \(auto-trust-anchor-file: *\)"[^"]*"/\1"\/etc\/dnssec\/root-anchors.txt"/' \
+	"${D}"/etc/unbound/unbound.conf
+
 
 	newinitd "${FILESDIR}/unbound.initd" unbound || die "newinitd failed"
 	newconfd "${FILESDIR}/unbound.confd" unbound || die "newconfd failed"
