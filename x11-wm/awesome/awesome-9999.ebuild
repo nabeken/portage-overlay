@@ -24,7 +24,7 @@ RDEPEND=">=dev-lang/lua-5.1[deprecated]
 	dev-util/gperf
 	media-libs/imlib2[png]
 	x11-libs/cairo[xcb]
-	x11-libs/libX11[xcb]
+	x11-libs/libX11
 	>=x11-libs/libxcb-1.4
 	>=x11-libs/pango-1.19.3
 	>=x11-libs/startup-notification-0.10
