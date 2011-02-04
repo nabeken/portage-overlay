@@ -5,7 +5,7 @@
 EAPI=2
 inherit eutils multilib
 
-PRE_REVISION="1887"
+PRE_REVISION="1972"
 
 DESCRIPTION="The PowerDNS Daemon"
 MY_P="${PN}-${PV/_pre/-pre.}.${PRE_REVISION}"
