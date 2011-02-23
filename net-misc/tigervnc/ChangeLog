@@ -1,0 +1,335 @@
+# ChangeLog for net-misc/tigervnc
+# Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/net-misc/tigervnc/ChangeLog,v 1.82 2011/02/15 00:03:41 xarthisius Exp $
+
+  15 Feb 2011; Kacper Kowalik <xarthisius@gentoo.org>
+  tigervnc-1.0.1_p20100914-r5.ebuild:
+  ppc stable wrt #354513
+
+  13 Feb 2011; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-1.0.1_p20100914-r4.ebuild:
+  alpha/ia64/sh/sparc stable wrt #348021
+
+  12 Feb 2011; Christian Faulhammer <fauli@gentoo.org>
+  tigervnc-1.0.1_p20100914-r5.ebuild:
+  stable x86, bug 354513
+
+  12 Feb 2011; Markos Chandras <hwoarang@gentoo.org>
+  tigervnc-1.0.1_p20100914-r5.ebuild:
+  Stable on amd64 wrt bug #354513
+
+  11 Feb 2011; Raúl Porcel <armin76@gentoo.org>
+  -tigervnc-1.0.1_pre20100306-r1.ebuild, -tigervnc-1.0.1_p20100529.ebuild,
+  -tigervnc-1.0.1_p20100529-r2.ebuild, -tigervnc-1.0.1_p20100914-r2.ebuild,
+  +tigervnc-1.0.1_p20100914-r5.ebuild:
+  Revision bump using xorg-server-1.9.4
+
+  31 Dec 2010; Jeroen Roovers <jer@gentoo.org>
+  tigervnc-1.0.1_p20100914-r4.ebuild:
+  Stable for HPPA (bug #348021).
+
+  29 Dec 2010; Markus Meier <maekke@gentoo.org>
+  tigervnc-1.0.1_p20100914-r4.ebuild:
+  arm stable, bug #348021
+
+  25 Dec 2010; Christian Faulhammer <fauli@gentoo.org>
+  tigervnc-1.0.1_p20100914-r4.ebuild:
+  stable x86, bug 348021
+
+  23 Dec 2010; Samuli Suominen <ssuominen@gentoo.org>
+  tigervnc-1.0.1_p20100914-r4.ebuild:
+  amd64 stable wrt #348021
+
+  19 Dec 2010; Samuli Suominen <ssuominen@gentoo.org>
+  tigervnc-1.0.1_p20100914-r4.ebuild:
+  ppc64 stable wrt #348021
+
+*tigervnc-1.0.1_p20100914-r4 (09 Dec 2010)
+
+  09 Dec 2010; Raúl Porcel <armin76@gentoo.org>
+  +tigervnc-1.0.1_p20100914-r4.ebuild:
+  Add a new revision for xorg-server-1.9
+
+  21 Oct 2010; Brent Baude <ranger@gentoo.org>
+  tigervnc-1.0.1_p20100914.ebuild:
+  Marking tigervnc-1.0.1_p20100914 ppc for bug 338038
+
+  21 Oct 2010; Brent Baude <ranger@gentoo.org>
+  tigervnc-1.0.1_p20100529.ebuild:
+  Marking tigervnc-1.0.1_p20100529 ppc for bug 332045
+
+  06 Oct 2010; Markus Meier <maekke@gentoo.org>
+  tigervnc-1.0.1_p20100914.ebuild:
+  x86 stable, bug #338038
+
+  03 Oct 2010; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-1.0.1_p20100914.ebuild:
+  alpha stable wrt #338038
+
+  22 Sep 2010; Jeroen Roovers <jer@gentoo.org>
+  tigervnc-1.0.1_p20100914.ebuild:
+  Stable for HPPA (bug #332045).
+
+  21 Sep 2010; Markos Chandras <hwoarang@gentoo.org>
+  tigervnc-1.0.1_p20100914.ebuild:
+  Stable on amd64 wrt bug #338038
+
+  20 Sep 2010; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-1.0.1_p20100529.ebuild, tigervnc-1.0.1_p20100914.ebuild:
+  arm/ia64/sh/sparc stable
+
+*tigervnc-1.0.1_p20100914-r2 (14 Sep 2010)
+*tigervnc-1.0.1_p20100914 (14 Sep 2010)
+
+  14 Sep 2010; Raúl Porcel <armin76@gentoo.org>
+  +tigervnc-1.0.1_p20100914.ebuild, +tigervnc-1.0.1_p20100914-r2.ebuild:
+  Version bump
+
+  11 Sep 2010; Tomáš Chvátal <scarabeus@gentoo.org>
+  -tigervnc-1.0.0-r4.ebuild:
+  Remove version depending on to-be-removed xorg-server.
+
+  18 Aug 2010; Markus Meier <maekke@gentoo.org>
+  tigervnc-1.0.1_p20100529.ebuild:
+  arm/x86 stable, bug #332045
+
+  15 Aug 2010; Markos Chandras <hwoarang@gentoo.org>
+  tigervnc-1.0.1_p20100529.ebuild:
+  Stable on amd64 wrt bug #332045
+
+  15 Aug 2010; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-1.0.1_p20100529.ebuild:
+  Use xorg-1.7.7
+
+  09 Aug 2010; Joseph Jezak <josejx@gentoo.org>
+  tigervnc-1.0.1_pre20100306-r1.ebuild:
+  Marked ppc stable for bug #315483.
+
+  02 Aug 2010; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-1.0.1_pre20100306-r1.ebuild:
+  alpha/ia64/sh/sparc stable wrt #315483
+
+  31 Jul 2010; Raúl Porcel <armin76@gentoo.org>
+  -tigervnc-1.0.1_p20100529-r1.ebuild, tigervnc-1.0.1_p20100529-r2.ebuild:
+  Use xorg-server-1.8.2
+
+  06 Jul 2010; Jeroen Roovers <jer@gentoo.org>
+  tigervnc-1.0.1_pre20100306-r1.ebuild:
+  Stable for HPPA (bug #315483).
+
+*tigervnc-1.0.1_p20100529-r2 (19 Jun 2010)
+
+  19 Jun 2010; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-1.0.1_p20100529-r1.ebuild, +tigervnc-1.0.1_p20100529-r2.ebuild:
+  Add -r2 for xorg-server-1.8.1.901, downgrade -r1 to 1.8.0, add missing
+  xkeyboard-config dep wrt bug #323369
+
+*tigervnc-1.0.1_p20100529-r1 (29 May 2010)
+*tigervnc-1.0.1_p20100529 (29 May 2010)
+
+  29 May 2010; Raúl Porcel <armin76@gentoo.org> -tigervnc-1.0.0-r2.ebuild,
+  tigervnc-1.0.0-r4.ebuild, tigervnc-1.0.1_pre20100306-r1.ebuild,
+  +tigervnc-1.0.1_p20100529.ebuild, +tigervnc-1.0.1_p20100529-r1.ebuild:
+  Fix up GLX support wrt #308465, version bump
+
+  12 May 2010; Brent Baude <ranger@gentoo.org>
+  tigervnc-1.0.1_pre20100306-r1.ebuild:
+  Marking tigervnc-1.0.1_pre20100306-r1 ppc64 for bug 315483
+
+  18 Apr 2010; Markus Meier <maekke@gentoo.org>
+  tigervnc-1.0.1_pre20100306-r1.ebuild:
+  arm stable, bug #315483
+
+  17 Apr 2010; Markus Meier <maekke@gentoo.org>
+  tigervnc-1.0.1_pre20100306-r1.ebuild:
+  x86 stable, bug #315483
+
+  16 Apr 2010; Pacho Ramos <pacho@gentoo.org>
+  tigervnc-1.0.1_pre20100306-r1.ebuild:
+  amd64 stable, bug 315483
+
+*tigervnc-1.0.1_pre20100306-r1 (17 Mar 2010)
+
+  17 Mar 2010; Raúl Porcel <armin76@gentoo.org>
+  -tigervnc-1.0.1_pre20100306.ebuild, +tigervnc-1.0.1_pre20100306-r1.ebuild:
+  Use xorg-server-1.7.6
+
+  14 Mar 2010; Markus Meier <maekke@gentoo.org> tigervnc-1.0.0-r4.ebuild:
+  amd64 stable, bug #273107
+
+  12 Mar 2010; Jeroen Roovers <jer@gentoo.org> tigervnc-1.0.0-r4.ebuild:
+  Stable for HPPA (bug #273107).
+
+  09 Mar 2010; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-1.0.1_pre20100306.ebuild:
+  Add nasm depend on amd64
+
+  09 Mar 2010; Joseph Jezak <josejx@gentoo.org> tigervnc-1.0.0-r4.ebuild:
+  Marked ppc stable for bug #273107.
+
+  08 Mar 2010; Brent Baude <ranger@gentoo.org> tigervnc-1.0.0-r4.ebuild:
+  Marking tigervnc-1.0.0-r4 ppc64 for bug 273107
+
+  06 Mar 2010; Raúl Porcel <armin76@gentoo.org> files/tigervnc.initd:
+  Provide valid shell, wrt bug #285705
+
+*tigervnc-1.0.1_pre20100306 (06 Mar 2010)
+
+  06 Mar 2010; Raúl Porcel <armin76@gentoo.org>
+  +tigervnc-1.0.1_pre20100306.ebuild:
+  Version bump
+
+  04 Mar 2010; Raúl Porcel <armin76@gentoo.org> tigervnc-1.0.0-r4.ebuild:
+  alpha/arm/ia64/sh stable wrt #273107
+
+  04 Mar 2010; Tiago Cunha <tcunha@gentoo.org> tigervnc-1.0.0-r4.ebuild:
+  stable sparc, bug 273107
+
+  03 Mar 2010; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  tigervnc-1.0.0-r4.ebuild:
+  x86 stable wrt bug #273107
+
+*tigervnc-1.0.0-r4 (02 Mar 2010)
+
+  02 Mar 2010; Raúl Porcel <armin76@gentoo.org> +tigervnc-1.0.0-r4.ebuild:
+  Use system jpeg and zlib, bug #273107
+
+  02 Mar 2010; Raúl Porcel <armin76@gentoo.org> -tigervnc-1.0.0-r3.ebuild:
+  Revert
+
+*tigervnc-1.0.0-r3 (02 Mar 2010)
+
+  02 Mar 2010; Raúl Porcel <armin76@gentoo.org> +tigervnc-1.0.0-r3.ebuild:
+  Use system jpeg and zlib, bug #273107
+
+  24 Jan 2010; Raúl Porcel <armin76@gentoo.org> tigervnc-1.0.0-r2.ebuild:
+  Fix deps wrt #294596
+
+  24 Jan 2010; Raúl Porcel <armin76@gentoo.org> tigervnc-1.0.0-r2.ebuild:
+  Move dev-lang/nasm to DEPEND
+
+  22 Jan 2010; Raúl Porcel <armin76@gentoo.org> -tigervnc-0.0.90.ebuild,
+  -tigervnc-1.0.0.ebuild, tigervnc-1.0.0-r2.ebuild:
+  alpha/ia64/sh stable wrt #288685
+
+  22 Jan 2010; Tiago Cunha <tcunha@gentoo.org> tigervnc-1.0.0-r2.ebuild:
+  stable sparc, bug 288685
+
+  16 Jan 2010; Raúl Porcel <armin76@gentoo.org> tigervnc-1.0.0-r2.ebuild:
+  arm stable
+
+  14 Jan 2010; Jeroen Roovers <jer@gentoo.org> tigervnc-1.0.0-r2.ebuild:
+  Stable for HPPA (bug #288685).
+
+  27 Dec 2009; Joseph Jezak <josejx@gentoo.org> tigervnc-1.0.0-r2.ebuild:
+  Marked ppc/ppc64 for bug #288685.
+
+  22 Dec 2009; Markus Meier <maekke@gentoo.org> tigervnc-1.0.0-r2.ebuild:
+  amd64 stable, bug #288685
+
+  16 Dec 2009; Christian Faulhammer <fauli@gentoo.org>
+  tigervnc-1.0.0-r2.ebuild:
+  stable x86, bug 288685
+
+  15 Dec 2009; Raúl Porcel <armin76@gentoo.org> tigervnc-1.0.0-r1.ebuild:
+  alpha/ia64/sh/sparc stable wrt #291726
+
+*tigervnc-1.0.0-r2 (14 Dec 2009)
+
+  14 Dec 2009; Raúl Porcel <armin76@gentoo.org> +tigervnc-1.0.0-r2.ebuild:
+  Revision bump for xorg-server-1.6.5
+
+  08 Nov 2009; nixnut <nixnut@gentoo.org> tigervnc-1.0.0-r1.ebuild:
+  ppc stable #291726
+
+  08 Nov 2009; Jeroen Roovers <jer@gentoo.org> tigervnc-1.0.0-r1.ebuild:
+  Stable for HPPA (bug #291726).
+
+  04 Nov 2009; Markus Meier <maekke@gentoo.org> tigervnc-1.0.0-r1.ebuild:
+  amd64/arm/x86 stable, bug #291726
+
+*tigervnc-1.0.0-r1 (04 Oct 2009)
+
+  04 Oct 2009; Raúl Porcel <armin76@gentoo.org> +tigervnc-1.0.0-r1.ebuild:
+  Revision bump to support xorg-server-1.6
+
+  30 Sep 2009; Raúl Porcel <armin76@gentoo.org> tigervnc-1.0.0.ebuild:
+  Add glproto dep as non-optional
+
+*tigervnc-1.0.0 (13 Sep 2009)
+
+  13 Sep 2009; Raúl Porcel <armin76@gentoo.org> +tigervnc-1.0.0.ebuild:
+  Version bump
+
+  12 Jul 2009; Tobias Klausmann <klausman@gentoo.org>
+  tigervnc-0.0.90.ebuild:
+  Keyworded on alpha, bug #266117
+
+  25 Jun 2009; Raúl Porcel <armin76@gentoo.org> tigervnc-0.0.90.ebuild:
+  Add x11-libs/pixman dep
+
+  06 Jun 2009; Raúl Porcel <armin76@gentoo.org> tigervnc-0.0.90.ebuild:
+  Add dev-lang/nasm dep on x86, bug 272658
+
+  29 May 2009; Raúl Porcel <armin76@gentoo.org> tigervnc-0.0.90.ebuild:
+  Add ~arm
+
+*tigervnc-0.0.90 (25 May 2009)
+
+  25 May 2009; Raúl Porcel <armin76@gentoo.org> +tigervnc-0.0.90.ebuild,
+  -tigervnc-0.0.90_p3631.ebuild, -tigervnc-0.0.90_p3751.ebuild:
+  Version bump
+
+  25 May 2009; Raúl Porcel <armin76@gentoo.org> files/tigervnc.initd:
+  Typo in init script
+
+  29 Apr 2009; Markus Meier <maekke@gentoo.org>
+  tigervnc-0.0.90_p3751.ebuild:
+  add ~amd64, bug #266117
+
+  26 Apr 2009; nixnut <nixnut@gentoo.org> tigervnc-0.0.90_p3751.ebuild:
+  ~ppc #266117
+
+  22 Apr 2009; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-0.0.90_p3751.ebuild:
+  Add ~sparc and remove --enable-xcsecurity as its not recommended upstream
+
+  18 Apr 2009; Brent Baude <ranger@gentoo.org> tigervnc-0.0.90_p3751.ebuild:
+  Marking tigervnc-0.0.90_p3751 ~ppc64 for bug 266117
+
+  17 Apr 2009; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-0.0.90_p3751.ebuild:
+  Add ~sh
+
+  16 Apr 2009; Jeroen Roovers <jer@gentoo.org> tigervnc-0.0.90_p3751.ebuild:
+  Marked ~hppa (bug #266117).
+
+  14 Apr 2009; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-0.0.90_p3751.ebuild:
+  Remove some useless code, and remove the man entries if server is not
+  built
+
+  14 Apr 2009; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-0.0.90_p3751.ebuild:
+  Add ~ia64
+
+*tigervnc-0.0.90_p3751 (14 Apr 2009)
+
+  14 Apr 2009; Raúl Porcel <armin76@gentoo.org>
+  +tigervnc-0.0.90_p3751.ebuild:
+  Version bump
+
+  12 Mar 2009; Raúl Porcel <armin76@gentoo.org> files/vncviewer.png:
+  Change the vncviewer icon
+
+  08 Mar 2009; Raúl Porcel <armin76@gentoo.org>
+  tigervnc-0.0.90_p3631.ebuild:
+  Fix HOMEPAGE
+
+*tigervnc-0.0.90_p3631 (08 Mar 2009)
+
+  08 Mar 2009; Raúl Porcel <armin76@gentoo.org> +files/tigervnc.confd,
+  +files/tigervnc.initd, +files/vncviewer.png, +metadata.xml,
+  +tigervnc-0.0.90_p3631.ebuild:
+  Initial commit, ebuild by me
+
