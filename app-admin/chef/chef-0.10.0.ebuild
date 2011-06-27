@@ -30,6 +30,8 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	>=dev-ruby/ohai-0.6.0
 	>=dev-ruby/rest-client-1.0.4
 	<dev-ruby/rest-client-1.7.0
+	>=dev-ruby/net-ssh-2.1.4
+	>=dev-ruby/net-ssh-multi-1.0.1
 	dev-ruby/ruby-shadow
 	>=dev-ruby/treetop-1.4.9
 	dev-ruby/uuidtools"
