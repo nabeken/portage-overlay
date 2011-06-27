@@ -20,7 +20,6 @@ IUSE=""
 
 ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	dev-ruby/erubis
-	dev-ruby/extlib
 	dev-ruby/highline
 	>=dev-ruby/json-1.4.4
 	>=dev-ruby/mixlib-authentication-1.1.0
@@ -34,9 +33,9 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	dev-ruby/ruby-shadow
 	dev-ruby/uuidtools"
 
-all_ruby_prepare() {
-	epatch "${FILESDIR}"/${PN}-0.9.12-package-reinstall.patch
-}
+#all_ruby_prepare() {
+#	epatch "${FILESDIR}"/${PN}-0.9.12-package-reinstall.patch
+#}
 
 all_ruby_install() {
 	all_fakegem_install
