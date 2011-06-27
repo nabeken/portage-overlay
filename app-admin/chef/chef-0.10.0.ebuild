@@ -25,7 +25,7 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	>=dev-ruby/mixlib-authentication-1.1.0
 	>=dev-ruby/mixlib-cli-1.1.0
 	>=dev-ruby/mixlib-config-1.1.0
-	>=dev-ruby/mixlib-log-1.1.0
+	>=dev-ruby/mixlib-log-1.3.0
 	dev-ruby/moneta
 	>=dev-ruby/ohai-0.5.6
 	>=dev-ruby/rest-client-1.0.4
