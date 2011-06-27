@@ -30,7 +30,7 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	dev-ruby/moneta
 	>=dev-ruby/ohai-0.5.6
 	>=dev-ruby/rest-client-1.0.4
-	<=dev-ruby/rest-client-1.5.1
+	<dev-ruby/rest-client-1.7.0
 	dev-ruby/ruby-shadow
 	dev-ruby/uuidtools"
 
