@@ -28,5 +28,5 @@ each_ruby_compile() {
 	emake -Cext/dep_gecode \
 		CFLAGS="${CFLAGS} -fPIC" \
 		archflag="${LDFLAGS}" || die "make extension failed"
-	cp -l ext/dep_gecode/dep_gecode$(get_modname) lib/${PN}/ || die
+	cp -l ext/dep_gecode/dep_gecode$(get_modname) lib/ || die
 }
