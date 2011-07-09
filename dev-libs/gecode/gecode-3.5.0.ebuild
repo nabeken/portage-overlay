@@ -13,10 +13,10 @@ SRC_URI="http://www.gecode.org/download/${P}.tar.gz"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
+IUSE="examples"
 
 src_configure() {
-	econf
+	econf "$(use_enable examples)"
 }
 
 src_install() {
