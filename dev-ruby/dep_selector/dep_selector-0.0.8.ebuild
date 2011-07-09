@@ -20,6 +20,13 @@ IUSE=""
 
 DEPEND="dev-libs/gecode"
 
-all_ruby_install() {
-	all_fakegem_install
+each_ruby_configure() {
+	${RUBY} -Cext/dep_gecode extconf.rb || die "extconf.rb failed"
+}
+
+each_ruby_compile() {
+	emake -Cext/dep_gecode \
+		CFLAGS="${CFLAGS} -fPIC" \
+		archflag="${LDFLAGS}" || die "make extension failed"
+	cp -l ext/dep_gecode/dep_gecode$(get_modname) lib/${PN}/ || die
 }
