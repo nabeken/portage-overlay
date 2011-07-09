@@ -15,3 +15,6 @@
 
 # PID file location.
 #CHEF_EXPANDER_PIDFILE="/var/run/chef/expander.pid"
+
+# Number of nodes in the ring
+#CHEF_EXPANDER_NODE_COUNT="3"
