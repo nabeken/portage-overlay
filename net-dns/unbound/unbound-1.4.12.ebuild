@@ -66,7 +66,7 @@ src_configure() {
 	# To avoid below error messages, set 'trust-anchor-file' to same value in
 	# 'auto-trust-anchor-file'.
 	# [23109:0] error: Could not open autotrust file for writing, # /etc/dnssec/root-anchors.txt: Permission denied
-	sed -i -e "s|trust-anchor-file: \"\"|trust-anchor-file: \"${DNSSEC_ROOT_ANCHORS_FILE}\"|" \
+	sed -i -e "s|trust-anchor-file: \"\"|trust-anchor-file: \"${EPREFIX}${DNSSEC_ROOT_ANCHORS_FILE}\"|" \
 	 doc/example.conf || die "sed failed"
 
 }
