@@ -62,6 +62,13 @@ src_configure() {
 		# $(use_enable debug alloc-checks) \
 		# $(use_enable debug alloc-lite) \
 		# $(use_enable debug alloc-nonregional) \
+
+	# To avoid below error messages, set 'trust-anchor-file' to same value in
+	# 'auto-trust-anchor-file'.
+	# [23109:0] error: Could not open autotrust file for writing, # /etc/dnssec/root-anchors.txt: Permission denied
+	sed -i -e "s|trust-anchor-file: \"\"|trust-anchor-file: \"${DNSSEC_ROOT_ANCHORS_FILE}\"|" \
+	 doc/example.conf || die "sed failed"
+
 }
 
 src_install() {
@@ -74,12 +81,6 @@ src_install() {
 	if ! use static-libs ; then
 		find "${ED}" -name "*.la" -type f -delete || die
 	fi
-
-	# To avoid below error messages, set 'trust-anchor-file' to same value in
-	# 'auto-trust-anchor-file'.
-	# [23109:0] error: Could not open autotrust file for writing, # /etc/dnssec/root-anchors.txt: Permission denied
-	sed -i -e "s|trust-anchor-file: \"\"|trust-anchor-file: \"${DNSSEC_ROOT_ANCHORS_FILE}\"|" \
-	 "${D}"/etc/unbound/unbound.conf || die "sed failed"
 
 	newinitd "${FILESDIR}/unbound.initd" unbound || die "newinitd failed"
 	newconfd "${FILESDIR}/unbound.confd" unbound || die "newconfd failed"
