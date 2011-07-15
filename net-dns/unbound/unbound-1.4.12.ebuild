@@ -41,6 +41,15 @@ pkg_setup() {
 	enewuser unbound -1 -1 /etc/unbound unbound
 }
 
+src_prepare() {
+	# To avoid below error messages, set 'trust-anchor-file' to same value in
+	# 'auto-trust-anchor-file'.
+	# [23109:0] error: Could not open autotrust file for writing, # /etc/dnssec/root-anchors.txt: Permission denied
+	sed -i -e \
+		"s|trust-anchor-file: \"\"|trust-anchor-file: \"${EPREFIX}${DNSSEC_ROOT_ANCHORS_FILE}\"|" \
+		doc/example.conf.in || die "sed failed"
+}
+
 src_configure() {
 	append-ldflags -Wl,-z,noexecstack || die
 
@@ -62,13 +71,6 @@ src_configure() {
 		# $(use_enable debug alloc-checks) \
 		# $(use_enable debug alloc-lite) \
 		# $(use_enable debug alloc-nonregional) \
-
-	# To avoid below error messages, set 'trust-anchor-file' to same value in
-	# 'auto-trust-anchor-file'.
-	# [23109:0] error: Could not open autotrust file for writing, # /etc/dnssec/root-anchors.txt: Permission denied
-	sed -i -e "s|trust-anchor-file: \"\"|trust-anchor-file: \"${EPREFIX}${DNSSEC_ROOT_ANCHORS_FILE}\"|" \
-	 doc/example.conf || die "sed failed"
-
 }
 
 src_install() {
