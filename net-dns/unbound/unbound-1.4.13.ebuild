@@ -6,7 +6,6 @@ EAPI="3"
 PYTHON_DEPEND="python? 2"
 SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.*"
-DNSSEC_ROOT_ANCHORS_FILE="/etc/dnssec/root-anchors.txt"
 
 inherit eutils flag-o-matic python
 
@@ -39,25 +38,24 @@ RDEPEND="${RDEPEND}
 pkg_setup() {
 	enewgroup unbound
 	enewuser unbound -1 -1 /etc/unbound unbound
+
+	use python && python_pkg_setup
 }
 
 src_prepare() {
 	# To avoid below error messages, set 'trust-anchor-file' to same value in
 	# 'auto-trust-anchor-file'.
 	# [23109:0] error: Could not open autotrust file for writing, # /etc/dnssec/root-anchors.txt: Permission denied
-	sed -i -e \
-		"s|trust-anchor-file: \"\"|trust-anchor-file: \"${EPREFIX}${DNSSEC_ROOT_ANCHORS_FILE}\"|" \
-		doc/example.conf.in || die "sed failed"
+	epatch "${FILESDIR}/${PN}-1.4.12-gentoo.patch"
 }
 
 src_configure() {
 	append-ldflags -Wl,-z,noexecstack || die
-
 	econf \
 		--with-pidfile="${EPREFIX}"/var/run/unbound.pid \
 		--with-ldns="${EPREFIX}"/usr \
 		--with-libevent="${EPREFIX}"/usr \
-		--with-rootkey-file="${EPREFIX}""${DNSSEC_ROOT_ANCHORS_FILE}" \
+		--with-rootkey-file="${EPREFIX}"/etc/dnssec/root-anchors.txt \
 		$(use_enable debug) \
 		$(use_enable gost) \
 		$(use_enable static-libs static) \
@@ -99,4 +97,12 @@ src_install() {
 
 	exeinto /usr/share/${PN}
 	doexe contrib/update-anchor.sh || die "doexe failed"
+}
+
+pkg_postinst() {
+	use python && python_mod_optimize unbound.py unboundmodule.py
+}
+
+pkg_postrm() {
+	use python && python_mod_cleanup unbound.py unboundmodule.py
 }
