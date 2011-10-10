@@ -1,0 +1,90 @@
+# ChangeLog for dev-ruby/net-ssh-gateway
+# Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-ruby/net-ssh-gateway/ChangeLog,v 1.20 2011/06/04 17:08:08 armin76 Exp $
+
+  04 Jun 2011; Raúl Porcel <armin76@gentoo.org>
+  net-ssh-gateway-1.0.1-r1.ebuild:
+  ia64 stable wrt #321103
+
+  26 May 2011; Markus Meier <maekke@gentoo.org>
+  net-ssh-gateway-1.0.1-r1.ebuild:
+  x86 stable, bug #321103
+
+  04 May 2011; Christoph Mende <angelos@gentoo.org>
+  net-ssh-gateway-1.0.1-r1.ebuild:
+  Stable on amd64 wrt bug #321103
+
+*net-ssh-gateway-1.1.0 (01 May 2011)
+
+  01 May 2011; Hans de Graaff <graaff@gentoo.org>
+  +net-ssh-gateway-1.1.0.ebuild:
+  Version bump.
+
+  16 Mar 2011; Hans de Graaff <graaff@gentoo.org>
+  net-ssh-gateway-1.0.1-r1.ebuild:
+  Add ree18.
+
+  21 Dec 2010; Hans de Graaff <graaff@gentoo.org>
+  net-ssh-gateway-1.0.1-r1.ebuild:
+  Keyword ~x86-macos.
+
+  15 Aug 2010; Diego E. Pettenò <flameeyes@gentoo.org>
+  net-ssh-gateway-1.0.1-r1.ebuild:
+  Block test-unit:2 for testing.
+
+  22 May 2010; Diego E. Pettenò <flameeyes@gentoo.org>
+  net-ssh-gateway-1.0.1-r1.ebuild:
+  Various cleanups.
+
+  30 Jan 2010; Raúl Porcel <armin76@gentoo.org>
+  net-ssh-gateway-1.0.1-r1.ebuild:
+  Add ~ia64
+
+*net-ssh-gateway-1.0.1-r1 (23 Jan 2010)
+
+  23 Jan 2010; Hans de Graaff <graaff@gentoo.org>
+  +net-ssh-gateway-1.0.1-r1.ebuild:
+  Convert to ruby-fakegem. Drop ia64 keyword: #301657.
+
+  08 Jan 2010; Hans de Graaff <graaff@gentoo.org>
+  -net-ssh-gateway-1.0.0.ebuild:
+  Remove old version.
+
+  04 Jan 2010; Christian Faulhammer <fauli@gentoo.org>
+  net-ssh-gateway-1.0.1.ebuild:
+  Transfer Prefix keywords
+
+  10 Apr 2009; Raúl Porcel <armin76@gentoo.org>
+  net-ssh-gateway-1.0.1.ebuild:
+  ia64 stable wrt #264325
+
+  05 Apr 2009; Markus Meier <maekke@gentoo.org>
+  net-ssh-gateway-1.0.1.ebuild:
+  amd64/x86 stable, bug #264325
+
+  03 Apr 2009; Joseph Jezak <josejx@gentoo.org>
+  net-ssh-gateway-1.0.1.ebuild:
+  Marked ppc/ppc64 stable for bug #264325.
+
+*net-ssh-gateway-1.0.1 (25 Feb 2009)
+
+  25 Feb 2009; Robin H. Johnson <robbat2@gentoo.org>
+  +net-ssh-gateway-1.0.1.ebuild:
+  Version bump
+
+  22 Sep 2008; Raúl Porcel <armin76@gentoo.org>
+  net-ssh-gateway-1.0.0.ebuild:
+  Add ~ia64 wrt #238171
+
+  21 Sep 2008; Brent Baude <ranger@gentoo.org> net-ssh-gateway-1.0.0.ebuild:
+  keyworded ~arch for ppc, bug 238171
+
+  21 Sep 2008; Brent Baude <ranger@gentoo.org> net-ssh-gateway-1.0.0.ebuild:
+  keyworded ~arch for ppc64, bug 238171
+
+*net-ssh-gateway-1.0.0 (20 Sep 2008)
+
+  20 Sep 2008; Hans de Graaff <graaff@gentoo.org> +metadata.xml,
+  +net-ssh-gateway-1.0.0.ebuild:
+  Initial import for Capistrano 2.5.0.
+
