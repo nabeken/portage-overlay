@@ -19,3 +19,22 @@ LICENSE="Ruby"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
+
+each_ruby_configure() {
+	${RUBY} extconf.rb || die "extconf.rb failed"
+}
+
+each_ruby_compile() {
+	case ${RUBY} in
+		*ruby19)
+			CFLAGS="${CFLAGS} -DRUBY19"
+			;;
+		*)
+			;;
+	esac
+	emake \
+		CFLAGS="${CFLAGS} -fPIC" \
+		archflag="${LDFLAGS}" || die "make extension failed"
+	mkdir lib || die
+	cp -l shadow$(get_modname) lib/ || die
+}
